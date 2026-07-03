@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matriz de diseño instruccional - Curso Ley N.° 21.719 de Protección de Datos Personales</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --cream:#F5F5EB;
+    --sand:#EFE7DA;
+    --tan:#E1DACA;
+    --taupe:#C1B6A3;
+    --clay:#B3907A;
+    --clay-dark:#96725D;
+    /* extended tones — derived to stay within the same warm, muted earth palette,
+       used mainly to tell apart parallel Gantt rows */
+    --sage:#93A17E;
+    --sage-dark:#788763;
+    --slate:#88A0AC;
+    --ochre:#C7A253;
+    --rust:#A85C42;
+    --umber:#5B4A3D;
+    --ink:#3B342C;
+    --ink-soft:#6E6156;
+    --ink-faint:#948676;
+    --white:#FFFFFF;
+    --radius-lg:22px;
+    --radius-md:14px;
+    --radius-sm:9px;
+    --shadow:0 6px 24px rgba(59,52,44,0.08);
+    --shadow-hover:0 10px 30px rgba(59,52,44,0.14);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.01ms !important; transition-duration:0.01ms !important;}
+  }
+
+  body{
+    margin:0;
+    font-family:'Lexend', 'Segoe UI', sans-serif;
+    background:var(--cream);
+    color:var(--ink);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+
+  /* ============ HEADER ============ */
+  header.top{
+    padding:52px clamp(24px,4vw,64px) 40px;
+    background:
+      radial-gradient(circle at 85% -10%, rgba(179,144,122,0.16), transparent 55%),
+      var(--sand);
+    border-bottom:1px solid var(--tan);
+    position:relative;
+    overflow:hidden;
+  }
+  header.top::after{
+    content:"";
+    position:absolute;
+    right:-60px; top:-60px;
+    width:260px;height:260px;
+    border-radius:50%;
+    background:var(--tan);
+    opacity:0.55;
+  }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:12.5px; letter-spacing:0.14em; text-transform:uppercase; font-weight:600;
+    color:var(--clay-dark); background:var(--white);
+    padding:7px 14px; border-radius:100px; box-shadow:var(--shadow);
+    position:relative;
+  }
+  h1{
+    font-size:clamp(28px,4vw,44px); font-weight:700;
+    margin:20px 0 10px; letter-spacing:-0.01em; max-width:900px; position:relative;
+  }
+  h1 .thin{font-weight:300; display:block; font-size:0.5em; letter-spacing:0.02em; color:var(--ink-soft); margin-bottom:6px;}
+  .lede{max-width:640px; font-size:16.5px; color:var(--ink-soft); font-weight:300; position:relative;}
+
+  /* ============ TABS ============ */
+  .tabbar-wrap{
+    position:sticky; top:0; z-index:50;
+    background:rgba(245,245,235,0.94);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--tan);
+  }
+  .tabbar{max-width:1360px; margin:0 auto; padding:0 clamp(24px,4vw,64px); display:flex; gap:6px;}
+  .tab-btn{
+    appearance:none; border:none; background:none; font-family:inherit;
+    font-size:14.5px; font-weight:600; color:var(--ink-faint);
+    padding:16px 6px; cursor:pointer; position:relative;
+    display:flex; align-items:center; gap:8px;
+    border-bottom:3px solid transparent; transition:color 0.2s;
+  }
+  .tab-btn:hover{color:var(--ink);}
+  .tab-btn.active{color:var(--clay-dark); border-bottom-color:var(--clay);}
+  .tab-btn .n{
+    width:20px;height:20px;border-radius:50%; background:var(--tan); color:var(--ink-soft);
+    font-size:11px; display:flex; align-items:center; justify-content:center; font-weight:700;
+  }
+  .tab-btn.active .n{background:var(--clay); color:var(--white);}
+
+  main{max-width:1360px; margin:0 auto; padding:0 clamp(24px,4vw,64px) 90px;}
+  .view{display:none;}
+  .view.active{display:block;}
+
+  section.intro-block{padding:38px 0 8px; max-width:760px;}
+  section.intro-block h2{font-size:21px; margin:0 0 8px; font-weight:600;}
+  section.intro-block p{color:var(--ink-soft); font-weight:300; font-size:15px;}
+
+  /* ============ MODE SWITCH (Ruta visual / Temario) ============ */
+  .mode-switch{
+    display:inline-flex; gap:4px;
+    background:var(--sand); padding:5px; border-radius:100px;
+    margin:6px 0 30px; border:1px solid var(--tan);
+  }
+  .mode-btn{
+    appearance:none; border:none; background:none; font-family:inherit; cursor:pointer;
+    font-size:13.5px; font-weight:600; color:var(--ink-soft);
+    padding:9px 18px; border-radius:100px; transition:all 0.2s;
+  }
+  .mode-btn.active{background:var(--clay); color:var(--white); box-shadow:var(--shadow);}
+  .mode-view{display:none;}
+  .mode-view.active{display:block;}
+
+  /* ============ ROADMAP / PATH ============ */
+  .roadmap{position:relative; padding:10px 0 10px;}
+  .roadmap-track{
+    position:relative;
+    display:flex; flex-direction:column; gap:4px;
+    padding:6px 0;
+    max-width:760px;
+    margin:0 auto;
+  }
+  .roadmap-track::before{
+    content:"";
+    position:absolute; top:6px; bottom:6px; left:50%;
+    transform:translateX(-50%);
+    border-left:3px dashed var(--taupe);
+    z-index:0;
+  }
+
+  .stop{
+    position:relative;
+    display:grid;
+    grid-template-columns:1fr 68px 1fr;
+    align-items:center;
+    column-gap:22px;
+    padding:9px 0;
+  }
+  .stop-btn{
+    display:contents;
+    appearance:none; border:none; background:none; cursor:pointer; font-family:inherit;
+  }
+  .stop-node{
+    grid-column:2; justify-self:center; z-index:1;
+    width:64px; height:64px; border-radius:50%; background:var(--sand);
+    border:2.5px solid var(--tan); display:flex; align-items:center; justify-content:center;
+    font-size:25px; transition:transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  }
+  .stop.special .stop-node{background:var(--tan);}
+  .stop-btn:hover .stop-node{transform:scale(1.08); border-color:var(--clay); background:var(--clay); color:var(--white); box-shadow:var(--shadow-hover);}
+
+  .stop-card{
+    grid-column:1; justify-self:end; text-align:right;
+    background:var(--white); border:1.5px solid var(--tan); border-radius:var(--radius-md);
+    padding:11px 16px; max-width:280px;
+    transition:border-color 0.2s ease, box-shadow 0.2s ease;
+  }
+  .stop.right .stop-card{grid-column:3; justify-self:start; text-align:left;}
+  .stop-btn:hover .stop-card{border-color:var(--clay); box-shadow:var(--shadow);}
+  .stop-title{display:block; font-size:13.5px; font-weight:600; color:var(--ink); line-height:1.3;}
+  .stop-kind{display:block; font-size:10.5px; text-transform:uppercase; letter-spacing:0.08em; color:var(--clay-dark); font-weight:700; margin-top:2px;}
+
+  @media (max-width:680px){
+    .roadmap-track::before{left:31px;}
+    .stop{grid-template-columns:64px 1fr; column-gap:14px;}
+    .stop-card, .stop.right .stop-card{grid-column:2; justify-self:start; text-align:left;}
+  }
+
+  .roadmap-hint{
+    font-size:13px; color:var(--ink-faint); font-weight:300;
+    display:flex; align-items:center; gap:7px; margin-top:16px;
+  }
+
+  /* ============ TEMARIO SIMPLIFICADO (list) ============ */
+  .temario-simple{display:flex; flex-direction:column; gap:10px;}
+  .ts-item{
+    display:flex; align-items:flex-start; gap:16px;
+    background:var(--white); border:1px solid var(--tan); border-radius:var(--radius-md);
+    padding:16px 18px; cursor:pointer; text-align:left; width:100%;
+    appearance:none; font-family:inherit;
+  }
+  .ts-item:hover{border-color:var(--clay); box-shadow:var(--shadow);}
+  .ts-tag{
+    flex:0 0 auto; width:34px; height:34px; border-radius:10px;
+    background:var(--sand); display:flex; align-items:center; justify-content:center;
+    font-size:16px; margin-top:2px;
+  }
+  .ts-body{flex:1; min-width:0;}
+  .ts-kind{font-size:10.5px; text-transform:uppercase; letter-spacing:0.07em; color:var(--clay-dark); font-weight:700;}
+  .ts-title{font-size:14.5px; font-weight:600; margin-top:1px;}
+  .ts-topics{list-style:none; margin:5px 0 0; padding:0; display:flex; flex-wrap:wrap; gap:5px 8px;}
+  .ts-topics li{
+    font-size:12px; color:var(--ink-soft); font-weight:400;
+    display:flex; align-items:baseline; gap:5px;
+  }
+  .ts-topics li::before{content:"•"; color:var(--clay); font-weight:700;}
+  .ts-arrow{flex:0 0 auto; color:var(--ink-faint); font-size:16px;}
+
+  /* ============ MODAL DIALOG ============ */
+  dialog.module-dialog{
+    border:none; border-radius:24px; padding:0;
+    width:min(820px,92vw); max-height:86vh;
+    box-shadow:0 24px 70px rgba(0,0,0,0.32);
+  }
+  dialog.module-dialog[open]{ display:flex; flex-direction:column; }
+  dialog.module-dialog::backdrop{background:rgba(59,52,44,0.55); backdrop-filter:blur(2px);}
+  .dlg-head{
+    display:flex; align-items:center; gap:14px;
+    padding:22px 26px; border-bottom:1px solid var(--tan); background:var(--sand);
+    flex:0 0 auto; border-radius:24px 24px 0 0;
+  }
+  .dlg-icon{
+    width:46px;height:46px;border-radius:13px; background:var(--clay); color:var(--white);
+    display:flex; align-items:center; justify-content:center; font-size:22px; flex:0 0 auto;
+  }
+  .dlg-headtext{flex:1; min-width:0;}
+  .dlg-eyebrow{font-size:11px; font-weight:700; letter-spacing:0.09em; text-transform:uppercase; color:var(--clay-dark);}
+  .dlg-title{font-size:18px; font-weight:600; margin-top:2px;}
+  .dlg-close{
+    appearance:none; border:1.5px solid var(--tan); background:var(--white); cursor:pointer;
+    width:32px;height:32px;border-radius:50%; font-size:14px; color:var(--ink-soft); flex:0 0 auto;
+  }
+  .dlg-close:hover{border-color:var(--clay); color:var(--clay-dark);}
+
+  .dlg-content{padding:24px 26px 20px; overflow-y:auto; flex:1 1 auto; min-height:0;}
+
+  .pb-grid{display:grid; grid-template-columns:1.1fr 1fr; gap:26px;}
+  @media (max-width:640px){ .pb-grid{grid-template-columns:1fr;} }
+  .pb-block h4{font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:var(--clay-dark); font-weight:700; margin:0 0 8px;}
+  .pb-block p{font-size:14.5px; color:var(--ink-soft); font-weight:300; margin:0 0 14px;}
+
+  .temario-list{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px;}
+  .temario-list li{
+    font-size:14px; font-weight:400; color:var(--ink); background:var(--sand);
+    padding:9px 13px; border-radius:var(--radius-sm); display:flex; gap:9px; align-items:baseline;
+  }
+  .temario-list li::before{content:""; width:6px;height:6px;flex:0 0 auto; border-radius:50%; background:var(--clay); margin-top:6px;}
+
+  .resources-title{font-size:12px; text-transform:uppercase; letter-spacing:0.08em; color:var(--clay-dark); font-weight:700; margin:24px 0 12px;}
+  .resource-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(220px,1fr)); gap:12px; padding-bottom:26px;}
+  .res-card{background:var(--sand); border:1px solid var(--tan); border-radius:var(--radius-md); padding:15px; cursor:pointer;}
+  .res-card:hover{border-color:var(--clay);}
+  .res-top{display:flex; align-items:center; gap:9px;}
+  .res-icon{font-size:18px;}
+  .res-title{font-size:13.5px; font-weight:600; flex:1;}
+  .res-plus{font-size:16px; color:var(--clay-dark); font-weight:700; transition:transform 0.2s;}
+  .res-card.open .res-plus{transform:rotate(45deg);}
+  .res-snippet{font-size:12.5px; color:var(--ink-faint); font-weight:300; margin-top:7px;}
+  .res-card.open .res-snippet{display:none;}
+  .res-full{display:none; margin-top:9px; font-size:13px; color:var(--ink-soft); font-weight:300;}
+  .res-card.open .res-full{display:block;}
+  .res-full .lbl{font-size:10.5px; text-transform:uppercase; letter-spacing:0.06em; color:var(--clay-dark); font-weight:700; margin:9px 0 3px;}
+  .res-full .lbl:first-child{margin-top:0;}
+
+  .dlg-nav{
+    display:flex; justify-content:space-between; align-items:center;
+    padding:14px 26px; border-top:1px solid var(--tan); background:var(--sand);
+    flex:0 0 auto; border-radius:0 0 24px 24px;
+  }
+  .dlg-nav-btn{
+    appearance:none; border:1.5px solid var(--tan); background:var(--white); cursor:pointer;
+    font-family:inherit; font-size:13px; font-weight:600; color:var(--ink);
+    padding:8px 15px; border-radius:100px; display:flex; align-items:center; gap:6px;
+  }
+  .dlg-nav-btn:hover{border-color:var(--clay); color:var(--clay-dark);}
+  .dlg-nav-btn:disabled{opacity:0.35; cursor:default;}
+  .dlg-pos{font-size:12px; color:var(--ink-faint); font-weight:500;}
+
+  /* ============ GANTT ============ */
+  .gantt-wrap{padding-top:30px;}
+  .gantt-legend{display:flex; flex-wrap:wrap; gap:16px 22px; margin:18px 0 26px; font-size:13px; color:var(--ink-soft); font-weight:300;}
+  .leg-item{display:flex; align-items:center; gap:7px;}
+  .leg-swatch{width:13px;height:13px;border-radius:4px;}
+  .leg-swatch.diamond{border-radius:3px; transform:rotate(45deg);}
+
+  .gantt-card{
+    background:var(--white); border:1px solid var(--tan); border-radius:var(--radius-lg);
+    padding:26px 22px 30px; overflow-x:auto; box-shadow:var(--shadow);
+  }
+  .gantt-grid{
+    display:grid; grid-template-columns:230px repeat(31, minmax(26px,1fr));
+    grid-template-rows:44px; grid-auto-rows:38px;
+    min-width:1200px; row-gap:8px; column-gap:0;
+    position:relative;
+  }
+  .g-corner{grid-column:1; grid-row:1; position:sticky; left:0; background:var(--white); z-index:5;}
+  .g-daynum{text-align:center; font-size:11px; color:var(--ink-faint); font-weight:600;}
+  .g-dayletter{text-align:center; font-weight:400; color:var(--ink-faint); font-size:10px;}
+  .g-head-cell{
+    grid-row:1;
+    display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:1px;
+    padding-bottom:6px; border-bottom:1.5px solid var(--tan); align-self:end;
+  }
+  .g-head-cell.weekend{background:var(--sand); border-radius:6px 6px 0 0;}
+
+  .g-row-label{
+    grid-column:1; font-size:13px; font-weight:600; color:var(--ink);
+    display:flex; align-items:center; padding:8px 14px 8px 0;
+    position:sticky; left:0; background:var(--white); z-index:5;
+  }
+  .g-row-label .sub{display:block; font-weight:300; font-size:11px; color:var(--ink-faint); margin-top:2px;}
+
+  .g-row-bg{ grid-column:2/33; background:var(--cream); border-radius:8px; align-self:stretch; z-index:0; }
+  .g-row-bg.alt{ background:var(--sand); opacity:0.4; }
+
+  .g-daycell{ align-self:stretch; z-index:1; border-right:1px solid var(--tan); }
+  .g-daycell.weekend{ background:rgba(193,182,163,0.20); }
+
+  .g-bar{
+    align-self:center; height:24px; border-radius:7px;
+    box-shadow:0 2px 6px rgba(59,52,44,0.18); cursor:default; z-index:3;
+    margin:0 2px;
+  }
+  .g-diamond-cell{ align-self:center; justify-self:center; z-index:3; position:relative; height:34px; width:100%; }
+  .g-diamond{
+    position:absolute; top:50%; left:50%; width:19px; height:19px;
+    transform:translate(-50%,-50%) rotate(45deg);
+    border-radius:4px; box-shadow:0 2px 6px rgba(59,52,44,0.25); border:2px solid var(--white);
+  }
+  .g-bar:hover::after, .g-diamond-cell:hover::after{
+    content:attr(data-tip); position:absolute; bottom:130%; left:0;
+    background:var(--ink); color:var(--white); font-size:11.5px; font-weight:400;
+    padding:8px 11px; border-radius:8px; white-space:normal; width:230px; z-index:20;
+    box-shadow:0 6px 18px rgba(0,0,0,0.25);
+  }
+  .g-diamond-cell:hover::after{left:-50%;}
+
+  .gantt-note{
+    margin-top:20px; font-size:13px; color:var(--ink-faint); font-weight:300;
+    background:var(--sand); border-radius:var(--radius-md); padding:14px 16px; max-width:780px;
+  }
+
+  footer{text-align:center; padding:40px clamp(24px,4vw,64px) 60px; color:var(--ink-faint); font-size:12.5px; font-weight:300;}
+
+  :focus-visible{outline:2.5px solid var(--clay-dark); outline-offset:2px;}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <span class="eyebrow">Diseño instruccional · e-learning</span>
+  <h1><span class="thin">Matriz de diseño instruccional</span>Curso Ley N.° 21.719 de Protección de Datos Personales</h1>
+  <p class="lede">Ruta de aprendizaje del curso y planificación del proyecto. Elige cómo quieres revisarla y haz clic en cualquier módulo para abrir su detalle.</p>
+</header>
+
+<div class="tabbar-wrap">
+  <div class="tabbar">
+    <button class="tab-btn active" data-tab="ruta"><span class="n">1</span> Ruta de aprendizaje</button>
+    <button class="tab-btn" data-tab="gantt"><span class="n">2</span> Carta Gantt del proyecto</button>
+  </div>
+</div>
+
+<main>
+
+  <!-- ============ VISTA: RUTA DE APRENDIZAJE ============ -->
+  <div class="view active" id="view-ruta">
+    <section class="intro-block">
+      <h2>El recorrido del curso</h2>
+      <p>Un recorrido pensado para que la protección de datos deje de sentirse como letra chica y se convierta en parte de tu trabajo diario.</p>
+      <div class="mode-switch">
+        <button class="mode-btn active" data-mode="visual">Ruta visual</button>
+        <button class="mode-btn" data-mode="temario">Temario simplificado</button>
+      </div>
+    </section>
+
+    <div class="mode-view active" id="mode-visual">
+      <div class="roadmap">
+        <div class="roadmap-track" id="roadmap-track"></div>
+        <p class="roadmap-hint">↳ Haz clic en una parada para abrir su detalle.</p>
+      </div>
+    </div>
+
+    <div class="mode-view" id="mode-temario">
+      <div class="temario-simple" id="temario-simple"></div>
+    </div>
+  </div>
+
+  <!-- ============ VISTA: GANTT ============ -->
+  <div class="view" id="view-gantt">
+    <section class="intro-block">
+      <h2>Planificación del proyecto — julio 2026</h2>
+      <p>Entregas, ciclos de revisión y desarrollo de materiales hasta la codificación final del curso.</p>
+    </section>
+
+    <div class="gantt-wrap">
+      <div class="gantt-legend" id="gantt-legend"></div>
+      <div class="gantt-card">
+        <div class="gantt-grid" id="gantt-grid"></div>
+      </div>
+      <div class="gantt-note">
+        <strong>Sobre el guion:</strong> tras la entrega de la versión 1 (9 de julio), la contraparte revisa los días 9 y 10; Diseño Instruccional ajusta el guion los días 13 y 14; la contraparte valida esos ajustes el 15; y el guion queda en su versión final el 16 de julio. El desarrollo del material complementario avanza en paralelo desde el 9 de julio.
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>Matriz de diseño instruccional · Curso Ley N.° 21.719 de Protección de Datos Personales</footer>
+
+<!-- ============ MODAL ============ -->
+<dialog class="module-dialog" id="moduleDialog">
+  <div class="dlg-head">
+    <div class="dlg-icon" id="dlgIcon"></div>
+    <div class="dlg-headtext">
+      <div class="dlg-eyebrow" id="dlgEyebrow"></div>
+      <div class="dlg-title" id="dlgTitle"></div>
+    </div>
+    <button class="dlg-close" id="dlgClose" aria-label="Cerrar">✕</button>
+  </div>
+  <div class="dlg-content" id="dlgContent"></div>
+  <div class="dlg-nav">
+    <button class="dlg-nav-btn" id="dlgPrev">← Anterior</button>
+    <span class="dlg-pos" id="dlgPos"></span>
+    <button class="dlg-nav-btn" id="dlgNext">Siguiente →</button>
+  </div>
+</dialog>
+
+<script>
+/* ======================================================
+   DATA
+====================================================== */
+const modules = [
+{
+  id:'m0', tag:'00', kind:'special', kindLabel:'Apertura', icon:'🎬',
+  title:'Bienvenida', shortTitle:'Bienvenida',
+  hook:'Un adelanto directo: todo lo que puede salir mal si no proteges los datos de tus clientes.',
+  purpose:'Captar la atención del participante desde el primer segundo, con un adelanto de alto impacto que anticipa —sin resolverlos— los conflictos que atravesará el curso.',
+  outcome:'Reconocer por qué la protección de datos personales es parte de su trabajo, y ubicarse en la ruta que seguirá durante el curso.',
+  temario:['¿Por qué esta ley te importa a ti?','Qué aprenderás en este curso','Cómo se estructura tu recorrido'],
+  resources:[
+    {icon:'🎥', title:'Videocápsula teaser',
+     snippet:'Adelanto de alto impacto con las situaciones que se revisarán en el curso.',
+     full:'Montaje breve y directo, de ritmo alto, con escenas que no se resuelven: un cliente pregunta qué se hizo con sus datos, una alerta de seguridad se enciende en rojo, alguien exige evidencia de cumplimiento. Cierra con una pregunta a cámara: ¿tu organización está lista?',
+     purposeText:'Generar enganche inmediato e instalar la pregunta que el curso completo busca responder.'}
+  ]
+},
+{
+  id:'m1', tag:'01', kind:'normal', kindLabel:'Módulo 1', icon:'📘',
+  title:'Cuando los datos dejan de ser solo información', shortTitle:'El nuevo escenario',
+  hook:'Un cliente pregunta qué se hizo con sus datos, y nadie sabe responder.',
+  purpose:'Introducir al participante en el nuevo marco regulatorio chileno sobre protección de datos personales y por qué la Ley N.° 21.719 es un cambio de paradigma para las organizaciones.',
+  outcome:'Reconocer el alcance de la Ley N.° 21.719, sus principales cambios respecto de la normativa anterior, los principios que regulan el tratamiento de datos y los actores responsables de su cumplimiento.',
+  temario:['El nuevo escenario de la protección de datos en Chile','Qué cambia con la Ley N.° 21.719','Conceptos fundamentales','Principios del tratamiento de datos','Alcance de la ley (organismos públicos y privados)'],
+  resources:[
+    {icon:'🎥', title:'Videocápsulas',
+     snippet:'Tres videocápsulas conectadas, ambientadas en una misma organización.',
+     full:'Tres videocápsulas conectadas, guiadas por Antonia Reyes, Encargada de Cumplimiento. A través de distintos protagonistas, el participante descubre por qué surge la ley, qué cambia respecto de la normativa anterior y a quiénes obliga.',
+     purposeText:'Contextualizar los contenidos mediante storytelling coral, promoviendo el aprendizaje a partir de situaciones cercanas al entorno laboral.'},
+    {icon:'🛠️', title:'Actividad hands-on — "Radiografía de datos de mi organización"',
+     snippet:'Checklist diagnóstico de los datos personales que trata su organización.',
+     full:'Checklist para identificar qué datos personales trata su organización, qué áreas participan, quiénes actúan como responsables o encargados y cuáles son las principales brechas frente a la Ley N.° 21.719.',
+     purposeText:'Favorecer la transferencia inmediata de los conceptos al contexto laboral del participante.'},
+    {icon:'📊', title:'Infografía — "Los 8 principios que sustentan la Ley N.° 21.719"',
+     snippet:'Resume visualmente los 8 principios del tratamiento de datos, con ejemplos.',
+     full:'Resume los principios de licitud, finalidad, proporcionalidad, calidad, responsabilidad, seguridad, transparencia y confidencialidad, con una breve explicación y un ejemplo práctico para cada uno.',
+     purposeText:'Facilitar la comprensión de los conceptos centrales y entregar un recurso de consulta rápida.'},
+    {icon:'📄', title:'PDF Complementario',
+     snippet:'Contexto normativo ampliado y comparación entre ambas leyes.',
+     full:'Análisis comparativo entre la Ley N.° 19.628 y la Ley N.° 21.719, explicación de los principios legales, definiciones jurídicas y buenas prácticas para iniciar un proceso de adecuación normativa.',
+     purposeText:'Profundizar los contenidos del módulo y entregar un material de referencia permanente.'},
+    {icon:'📝', title:'Resumen',
+     snippet:'Síntesis de los principales cambios introducidos por la Ley N.° 21.719.',
+     full:'Síntesis de los cambios introducidos por la ley, conceptos fundamentales, principios rectores y aspectos que toda organización debe conocer antes de iniciar un proceso de cumplimiento.',
+     purposeText:'Facilitar el repaso de los contenidos esenciales previo a la evaluación.'},
+    {icon:'📖', title:'Glosario',
+     snippet:'Definiciones de los conceptos base del curso.',
+     full:'Definiciones de dato personal, dato sensible, tratamiento, titular, responsable, encargado, consentimiento, anonimización, seudonimización y demás conceptos del módulo.',
+     purposeText:'Homogeneizar el lenguaje técnico y jurídico utilizado a lo largo del curso.'},
+    {icon:'✔️', title:'Evaluación Modular',
+     snippet:'Preguntas y casos breves, uno por cada cápsula y contenido clave.',
+     full:'Preguntas de opción múltiple y casos breves, con retroalimentación inmediata. Requiere un 60% de logro para continuar al siguiente módulo.',
+     purposeText:'Verificar la comprensión de los fundamentos necesarios para avanzar en el curso.'}
+  ]
+},
+{
+  id:'m2', tag:'02', kind:'normal', kindLabel:'Módulo 2', icon:'🔍',
+  title:'¿Tengo permiso? Aprendiendo a decidir antes de tratar datos', shortTitle:'¿Tengo permiso?',
+  hook:'No todo tratamiento necesita permiso. Pero uno equivocado sale caro.',
+  purpose:'Profundizar en las condiciones que permiten el tratamiento lícito de datos personales, desarrollando la capacidad de determinar la base jurídica aplicable en cada caso.',
+  outcome:'Determinar la base de licitud aplicable en distintos escenarios organizacionales, diferenciando el consentimiento de las demás bases legales y las condiciones especiales para datos sensibles y biométricos.',
+  temario:['Bases de licitud del tratamiento','El consentimiento válido','Datos sensibles y biométricos','Finalidad, proporcionalidad y minimización','Categorías especiales (niños, geolocalización, datos financieros)','Tratamiento a través de terceros (encargados)','Casos frecuentes en las organizaciones'],
+  resources:[
+    {icon:'🎥', title:'Videocápsulas narrativas',
+     snippet:'Dos videocápsulas que siguen a distintas áreas de una misma empresa.',
+     full:'Dos videocápsulas que siguen a distintas áreas de una misma empresa enfrentando decisiones cotidianas sobre qué datos pueden tratar y bajo qué condiciones, desarrollando criterios para decidir cuándo un tratamiento es lícito.',
+     purposeText:'Desarrollar criterios para decidir cuándo un tratamiento de datos personales puede realizarse conforme a la ley.'},
+    {icon:'🛠️', title:'Actividad hands-on — "Mapa de licitud del tratamiento"',
+     snippet:'Plantilla para identificar procesos reales de tratamiento de datos.',
+     full:'El participante identifica procesos reales de tratamiento en su organización, define su finalidad, reconoce la base jurídica que los sustenta y evalúa la necesidad de consentimiento.',
+     purposeText:'Desarrollar la capacidad de análisis mediante escenarios progresivamente más complejos.'},
+    {icon:'📊', title:'Infografía — "Mapa de bases de licitud"',
+     snippet:'Resume visualmente cuándo aplica cada base de licitud del tratamiento.',
+     full:'Presenta de forma visual las distintas bases que permiten tratar datos personales —consentimiento, obligación legal, ejecución de un contrato, interés legítimo, entre otras— y cuándo corresponde aplicar cada una, incluyendo las categorías especiales de datos.',
+     purposeText:'Entregar un recurso visual de consulta rápida para decidir la base de licitud correcta en el puesto de trabajo.'},
+    {icon:'📄', title:'PDF Complementario',
+     snippet:'Desarrollo detallado de cada base de licitud y casos frecuentes.',
+     full:'Desarrollo de cada base de licitud, requisitos del consentimiento, situaciones frecuentes en marketing, recursos humanos y atención de clientes, y recomendaciones para documentar la base jurídica utilizada.',
+     purposeText:'Proporcionar criterios de análisis para resolver situaciones reales de tratamiento de datos.'},
+    {icon:'📝', title:'Resumen',
+     snippet:'Síntesis de las bases de licitud y cuadro comparativo.',
+     full:'Síntesis de las bases de licitud, requisitos del consentimiento y recomendaciones para evitar tratamientos indebidos, con un cuadro comparativo de las distintas bases legales.',
+     purposeText:'Facilitar el repaso de los conceptos esenciales antes de la evaluación.'},
+    {icon:'📖', title:'Glosario',
+     snippet:'Definiciones de base de licitud, consentimiento, interés legítimo y más.',
+     full:'Definiciones de base de licitud, consentimiento, interés legítimo, datos biométricos, datos de geolocalización, datos financieros y tercero mandatario o encargado.',
+     purposeText:'Favorecer el uso correcto de la terminología técnica y jurídica del módulo.'},
+    {icon:'✔️', title:'Evaluación Modular',
+     snippet:'Casos de opción múltiple, uno por cada cápsula y contenido clave.',
+     full:'Casos de opción múltiple con retroalimentación inmediata. Requiere un 60% de logro para continuar al siguiente módulo.',
+     purposeText:'Comprobar la capacidad de aplicar correctamente los criterios de licitud de la ley.'}
+  ]
+},
+{
+  id:'m3', tag:'03', kind:'normal', kindLabel:'Módulo 3', icon:'🤝',
+  title:'Cada solicitud importa: gestionando los derechos de los titulares', shortTitle:'Cada solicitud importa',
+  hook:'Cada solicitud que no se responde a tiempo se convierte en un problema.',
+  purpose:'Desarrollar las competencias para gestionar correctamente las solicitudes de los titulares de datos, garantizando el ejercicio efectivo de sus derechos.',
+  outcome:'Gestionar solicitudes de ejercicio de derechos de los titulares, aplicando correctamente los procedimientos, plazos y obligaciones establecidos en la ley.',
+  temario:['Los derechos de los titulares','Obligaciones del responsable del tratamiento','Procedimiento de atención','Plazos legales y causales de rechazo','Transparencia y experiencia del titular'],
+  resources:[
+    {icon:'🎥', title:'Videocápsulas',
+     snippet:'Dos videocápsulas que muestran distintas solicitudes de titulares.',
+     full:'La primera sigue a Javiera Soto gestionando, junto a Antonia Reyes, una solicitud real y aprendiendo los plazos de respuesta. La segunda sigue a Ignacio Bravo enfrentando un reclamo sobre decisiones automatizadas y portabilidad.',
+     purposeText:'Introducir los derechos de los titulares desde situaciones cotidianas y generar urgencia frente a su correcta gestión.'},
+    {icon:'💻', title:'Storyboard SCORM — "Centro de Atención al Titular"',
+     snippet:'Simulación donde se asume el rol de Responsable de Protección de Datos.',
+     full:'El participante gestiona una bandeja de solicitudes: identifica el derecho ejercido, valida antecedentes, define el procedimiento, controla los plazos legales y registra cada actuación.',
+     purposeText:'Favorecer el aprendizaje experiencial mediante situaciones similares a las del desempeño real.'},
+    {icon:'📊', title:'Infografía — "Ruta para gestionar los derechos de los titulares"',
+     snippet:'Flujo de atención, plazos legales y responsabilidades.',
+     full:'Los derechos reconocidos por la ley, el flujo de atención, plazos legales y principales consideraciones para una gestión oportuna.',
+     purposeText:'Proporcionar un recurso visual de consulta rápida para la gestión diaria de solicitudes.'},
+    {icon:'📄', title:'PDF Complementario',
+     snippet:'Guía práctica completa para la gestión de solicitudes de titulares.',
+     full:'Desarrolla cada derecho, el procedimiento completo de atención, casos frecuentes, errores habituales y ejemplos de respuestas adecuadas, con diagramas de flujo.',
+     purposeText:'Entregar una herramienta de apoyo para implementar procedimientos internos.'},
+    {icon:'📝', title:'Resumen',
+     snippet:'Síntesis de los derechos de los titulares y del procedimiento.',
+     full:'Síntesis de los derechos, plazos legales, obligaciones del responsable y recomendaciones para responder solicitudes de forma oportuna.',
+     purposeText:'Servir como apoyo previo a la evaluación o material de consulta en el puesto de trabajo.'},
+    {icon:'📖', title:'Glosario',
+     snippet:'Definiciones de acceso, rectificación, supresión, oposición y más.',
+     full:'Definiciones de acceso, rectificación, supresión, oposición, portabilidad, bloqueo, decisiones automatizadas y demás conceptos del módulo.',
+     purposeText:'Consolidar el uso adecuado de la terminología vinculada al ejercicio de derechos.'},
+    {icon:'✔️', title:'Evaluación Modular',
+     snippet:'Bandeja simulada con una secuencia de solicitudes de titulares.',
+     full:'Secuencia de 5 a 6 solicitudes, una por cada tipo de derecho, con retroalimentación inmediata. Requiere un 60% de logro para continuar.',
+     purposeText:'Verificar la capacidad de gestionar solicitudes reales bajo presión de plazo.'}
+  ]
+},
+{
+  id:'m4', tag:'04', kind:'normal', kindLabel:'Módulo 4', icon:'🛡️',
+  title:'¡Alerta! Cómo actuar frente a una brecha de seguridad', shortTitle:'¡Alerta de seguridad!',
+  hook:'Un correo mal enviado puede activar una crisis en minutos.',
+  purpose:'Desarrollar las competencias para prevenir, identificar y gestionar incidentes de seguridad que comprometan datos personales.',
+  outcome:'Gestionar incidentes de seguridad aplicando procedimientos de contención, evaluación de riesgos y notificación conforme a la ley.',
+  temario:['Seguridad en el tratamiento de datos','Protección desde el diseño y Evaluación de Impacto (EIPD)','Brechas e incidentes de seguridad','Gestión de incidentes','Obligaciones de notificación','Prevención y buenas prácticas'],
+  resources:[
+    {icon:'🎥', title:'Videocápsulas',
+     snippet:'Tres videocápsulas centradas en la seguridad de los datos.',
+     full:'Un incidente real que hay que contener y notificar, un proyecto nuevo que debe pensarse con protección de datos desde el diseño, y un cierre reflexivo sobre prevención, todo con la participación de Antonia Reyes.',
+     purposeText:'Introducir la gestión de incidentes y la prevención mediante situaciones cercanas al entorno laboral.'},
+    {icon:'💻', title:'Storyboard SCORM — "Centro de Gestión de Incidentes"',
+     snippet:'El participante lidera un comité de respuesta frente a una brecha.',
+     full:'El participante revisa evidencias, coordina con distintas áreas, decide si corresponde notificar a la Agencia y a los titulares afectados, y propone medidas correctivas.',
+     purposeText:'Desarrollar habilidades para responder ante incidentes reales bajo presión.'},
+    {icon:'📊', title:'Infografía — "Cómo actuar frente a una brecha de seguridad"',
+     snippet:'Ciclo completo de gestión de incidentes.',
+     full:'Detección, contención, análisis, notificación, recuperación y mejora continua, con un diagrama para determinar cuándo corresponde notificar.',
+     purposeText:'Proporcionar una guía práctica para la gestión de incidentes en el entorno laboral.'},
+    {icon:'📄', title:'PDF Complementario',
+     snippet:'Manual práctico sobre gestión de incidentes de seguridad.',
+     full:'Clasificación de incidentes, proceso de respuesta, criterios para evaluar el riesgo, obligaciones de notificación y medidas preventivas.',
+     purposeText:'Entregar herramientas para implementar procedimientos internos de gestión de incidentes.'},
+    {icon:'📝', title:'Resumen',
+     snippet:'Síntesis del proceso de gestión de incidentes.',
+     full:'Criterios para evaluar riesgos, obligaciones de notificación y recomendaciones para actuar en las primeras etapas de una brecha.',
+     purposeText:'Apoyar la aplicación práctica de los contenidos en el contexto laboral.'},
+    {icon:'📖', title:'Glosario',
+     snippet:'Definiciones de incidente, brecha, riesgo, EIPD y más.',
+     full:'Definiciones de incidente de seguridad, brecha, riesgo, protección desde el diseño y evaluación de impacto (EIPD), entre otros conceptos del módulo.',
+     purposeText:'Favorecer la comprensión homogénea de la terminología de seguridad.'},
+    {icon:'✔️', title:'Evaluación Modular',
+     snippet:'Casos de opción múltiple, uno por cada cápsula y contenido clave.',
+     full:'Casos de opción múltiple con retroalimentación inmediata. Requiere un 60% de logro para continuar.',
+     purposeText:'Verificar la capacidad de tomar decisiones oportunas ante un incidente de seguridad.'}
+  ]
+},
+{
+  id:'m5', tag:'05', kind:'normal', kindLabel:'Módulo 5', icon:'🏛️',
+  title:'Del cumplimiento a la confianza: construyendo una organización preparada', shortTitle:'Del cumplimiento a la confianza',
+  hook:'La multa que otra empresa no vio venir — y cómo evitarla.',
+  purpose:'Integrar los aprendizajes del curso para fortalecer la gestión de datos personales, promoviendo una cultura de cumplimiento y mejora continua.',
+  outcome:'Proponer acciones para fortalecer el cumplimiento de la ley mediante la identificación de brechas y la aplicación de principios de gobernanza.',
+  temario:['Gobernanza de datos personales','Roles y responsabilidades (incluye el DPO)','Modelos de cumplimiento','Agencia de Protección de Datos Personales','Infracciones, sanciones y responsabilidad','Transferencia internacional de datos','Hoja de ruta para la implementación'],
+  resources:[
+    {icon:'🎥', title:'Videocápsulas de cierre',
+     snippet:'Un caso real de sanción y una decisión de transferencia internacional.',
+     full:'La primera reconstruye el caso de una empresa sancionada ("Multa evitable") y muestra cómo la organización formaliza a Antonia Reyes como Delegada de Protección de Datos. La segunda sigue a Diego Farías enfrentando una decisión de transferencia internacional de datos.',
+     purposeText:'Mostrar que el cumplimiento depende del compromiso de toda la organización, del rol formal del DPO y de una adecuada gestión estratégica de los datos.'},
+    {icon:'💻', title:'Storyboard SCORM — "Plan de Cumplimiento 360°"',
+     snippet:'Construir, junto a Antonia como DPO, un plan de cumplimiento a tiempo.',
+     full:'El participante asume, junto a Antonia en su nuevo rol de DPO, la gestión del cumplimiento en una organización con las mismas brechas que la empresa de "Multa evitable", evitando el desenlace del caso.',
+     purposeText:'Integrar los conocimientos del curso en un desafío de planificación estratégica.'},
+    {icon:'📊', title:'Infografía — "Ruta hacia el cumplimiento de la Ley N.° 21.719"',
+     snippet:'Hoja de ruta con las etapas para implementar un modelo de cumplimiento.',
+     full:'Diagnóstico, roles, políticas internas, capacitación, gestión de riesgos y auditoría, junto con las facultades de la Agencia y los requisitos de transferencia internacional.',
+     purposeText:'Entregar una visión global del proceso de implementación.'},
+    {icon:'📄', title:'PDF Complementario',
+     snippet:'Guía práctica para implementar un modelo de cumplimiento.',
+     full:'Accountability, funciones del DPO, políticas y procedimientos, régimen sancionatorio y requisitos de transferencia internacional, con una propuesta de hoja de ruta.',
+     purposeText:'Proporcionar una herramienta práctica para iniciar o fortalecer un programa de cumplimiento.'},
+    {icon:'📝', title:'Resumen',
+     snippet:'Síntesis de los elementos esenciales de un modelo de cumplimiento.',
+     full:'Roles, responsabilidades, controles, fiscalización, sanciones y recomendaciones para fortalecer la cultura organizacional.',
+     purposeText:'Apoyar la transferencia de los aprendizajes al contexto laboral.'},
+    {icon:'📖', title:'Glosario',
+     snippet:'Definiciones de accountability, gobernanza, DPO y más.',
+     full:'Definiciones de accountability, gobernanza, DPO, fiscalización, infracción, sanción y transferencia internacional de datos.',
+     purposeText:'Consolidar la terminología de gestión organizacional y cumplimiento normativo.'},
+    {icon:'✔️', title:'Evaluación Modular',
+     snippet:'Casos de opción múltiple que integran todo lo aprendido en el curso.',
+     full:'Casos de opción múltiple con retroalimentación inmediata. Requiere un 60% de logro para aprobar el módulo y completar el curso.',
+     purposeText:'Verificar la capacidad de planificar un modelo básico de cumplimiento organizacional.'}
+  ]
+},
+{
+  id:'m6', tag:'06', kind:'special', kindLabel:'Cierre', icon:'🎓',
+  title:'De la teoría a la cultura', shortTitle:'Cierre del curso',
+  hook:'El cierre: todos los personajes, un solo desafío final.',
+  purpose:'Recapitular el curso de forma dinámica e integrar los aprendizajes en un desafío final.',
+  outcome:'Sintetizar los aprendizajes del curso y comprometerse con acciones concretas para fortalecer la cultura de protección de datos en su organización.',
+  temario:['Lo que recorrimos: de los principios a la cultura organizacional','Cierre y próximos pasos'],
+  resources:[
+    {icon:'🎥', title:'Videocápsula de cierre',
+     snippet:'Reencuentro con todos los protagonistas del curso.',
+     full:'El equipo se reúne para revisar en qué cambió su forma de trabajar, cerrando el recorrido abierto en la cápsula de bienvenida.',
+     purposeText:'Generar cierre y reforzar que la protección de datos es responsabilidad de todo el equipo.'}
+  ]
+}
+];
+
+/* ======================================================
+   GANTT DATA  (julio 2026)
+====================================================== */
+const ganttTasks = [
+  {label:'Entrega de matriz y carta Gantt', sub:'Diseño Instruccional', start:1, end:3, color:'var(--clay)',
+   tip:'1 al 3 de julio · Entrega de la matriz de diseño instruccional y la carta Gantt del proyecto.'},
+  {label:'Guion — versión 1', sub:'Diseño Instruccional', start:3, end:9, color:'var(--taupe)',
+   tip:'3 al 9 de julio (jueves) · Entrega de la primera versión completa del guion de storytelling.'},
+  {label:'Revisión de contraparte', sub:'2 rondas de observaciones', segments:[
+      {start:9, end:10, tip:'Ronda 1 · 9 y 10 de julio · Observaciones de contraparte sobre la versión 1 del guion.'},
+      {start:15, end:15, tip:'Ronda 2 · 15 de julio · Observaciones de contraparte sobre los ajustes de Diseño Instruccional.'}
+    ], color:'var(--rust)'},
+  {label:'Ajustes DI', sub:'Diseño Instruccional', start:13, end:14, color:'var(--sage)',
+   tip:'13 y 14 de julio · Diseño Instruccional ajusta el guion a partir de las observaciones de la ronda 1.'},
+  {label:'Guion — entrega final', sub:'Versión final del guion', diamonds:[
+      {day:16, tip:'16 de julio · Entrega de la versión final del guion.'}
+    ], color:'var(--ochre)'},
+  {label:'Material complementario', sub:'DI · en paralelo', start:9, end:22, color:'var(--slate)',
+   tip:'9 al 22 de julio · Desarrollo de infografías, PDF, resúmenes, glosarios y evaluaciones, en paralelo a los ciclos de revisión del guion.'},
+  {label:'Material SENCE', sub:'Documentación y formato', start:23, end:27, color:'var(--clay-dark)',
+   tip:'23 al 27 de julio · Preparación de la documentación y el material en formato SENCE.'},
+  {label:'Codificación', sub:'Montaje del curso e-learning', start:28, end:30, color:'var(--umber)',
+   tip:'28 al 30 de julio · Codificación y montaje final del curso en la plataforma e-learning.'}
+];
+
+/* ======================================================
+   RENDER: ROADMAP (visual)
+====================================================== */
+const track = document.getElementById('roadmap-track');
+modules.forEach((m, i) => {
+  const stop = document.createElement('div');
+  stop.className = 'stop' + (m.kind === 'special' ? ' special' : '') + (i % 2 === 1 ? ' right' : '');
+  stop.innerHTML = `
+    <button class="stop-btn" data-idx="${i}">
+      <span class="stop-node">${m.icon}</span>
+      <span class="stop-card">
+        <span class="stop-title">${m.shortTitle}</span>
+        <span class="stop-kind">${m.kindLabel}</span>
+      </span>
+    </button>`;
+  track.appendChild(stop);
+});
+
+/* ======================================================
+   RENDER: TEMARIO SIMPLIFICADO (list)
+====================================================== */
+const temarioWrap = document.getElementById('temario-simple');
+modules.forEach((m, i) => {
+  const item = document.createElement('button');
+  item.className = 'ts-item';
+  item.dataset.idx = i;
+  item.innerHTML = `
+    <span class="ts-tag">${m.icon}</span>
+    <span class="ts-body">
+      <span class="ts-kind">${m.kindLabel}</span>
+      <span class="ts-title">${m.title}</span>
+      <ul class="ts-topics">${m.temario.map(t => `<li>${t}</li>`).join('')}</ul>
+    </span>
+    <span class="ts-arrow">→</span>`;
+  temarioWrap.appendChild(item);
+});
+
+/* ======================================================
+   MODAL LOGIC
+====================================================== */
+const dlg = document.getElementById('moduleDialog');
+const dlgIcon = document.getElementById('dlgIcon');
+const dlgEyebrow = document.getElementById('dlgEyebrow');
+const dlgTitle = document.getElementById('dlgTitle');
+const dlgContent = document.getElementById('dlgContent');
+const dlgPos = document.getElementById('dlgPos');
+const dlgPrev = document.getElementById('dlgPrev');
+const dlgNext = document.getElementById('dlgNext');
+let currentIdx = 0;
+
+function renderModule(i){
+  currentIdx = i;
+  const m = modules[i];
+  dlgIcon.textContent = m.icon;
+  dlgEyebrow.textContent = m.kindLabel;
+  dlgTitle.textContent = m.title;
+  dlgPos.textContent = `${i+1} / ${modules.length}`;
+  dlgPrev.disabled = i === 0;
+  dlgNext.disabled = i === modules.length - 1;
+
+  const resourceCards = m.resources.map((r, ri) => `
+    <div class="res-card" data-res="${i}-${ri}">
+      <div class="res-top">
+        <span class="res-icon">${r.icon}</span>
+        <span class="res-title">${r.title}</span>
+        <span class="res-plus">+</span>
+      </div>
+      <div class="res-snippet">${r.snippet}</div>
+      <div class="res-full">
+        <div class="lbl">Contenido</div>
+        <div>${r.full}</div>
+        <div class="lbl">Propósito pedagógico</div>
+        <div>${r.purposeText}</div>
+      </div>
+    </div>`).join('');
+
+  dlgContent.innerHTML = `
+    <div class="pb-grid">
+      <div class="pb-block">
+        <h4>Propósito del módulo</h4>
+        <p>${m.purpose}</p>
+        <h4>Resultado de aprendizaje</h4>
+        <p>${m.outcome}</p>
+      </div>
+      <div class="pb-block">
+        <h4>Temario resumido</h4>
+        <ul class="temario-list">${m.temario.map(t => `<li>${t}</li>`).join('')}</ul>
+      </div>
+    </div>
+    <div class="resources-title">Recursos del módulo — clic para ver el detalle</div>
+    <div class="resource-grid">${resourceCards}</div>`;
+
+  dlgContent.scrollTop = 0;
+}
+
+function openModal(i){
+  renderModule(i);
+  if(!dlg.open) dlg.showModal();
+}
+
+document.querySelectorAll('.stop-btn').forEach(btn => {
+  btn.addEventListener('click', () => openModal(parseInt(btn.dataset.idx,10)));
+});
+temarioWrap.addEventListener('click', (e) => {
+  const item = e.target.closest('.ts-item');
+  if(item) openModal(parseInt(item.dataset.idx,10));
+});
+
+document.getElementById('dlgClose').addEventListener('click', () => dlg.close());
+dlg.addEventListener('click', (e) => { if(e.target === dlg) dlg.close(); });
+dlgPrev.addEventListener('click', () => { if(currentIdx>0) renderModule(currentIdx-1); });
+dlgNext.addEventListener('click', () => { if(currentIdx<modules.length-1) renderModule(currentIdx+1); });
+
+dlgContent.addEventListener('click', (e) => {
+  const card = e.target.closest('.res-card');
+  if(card) card.classList.toggle('open');
+});
+
+/* ======================================================
+   MODE SWITCH (Ruta visual / Temario)
+====================================================== */
+document.querySelectorAll('.mode-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const mode = btn.dataset.mode;
+    document.getElementById('mode-visual').classList.toggle('active', mode==='visual');
+    document.getElementById('mode-temario').classList.toggle('active', mode==='temario');
+  });
+});
+
+/* ======================================================
+   TABS
+====================================================== */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const tab = btn.dataset.tab;
+    document.getElementById('view-ruta').classList.toggle('active', tab === 'ruta');
+    document.getElementById('view-gantt').classList.toggle('active', tab === 'gantt');
+  });
+});
+
+/* ======================================================
+   RENDER: GANTT
+====================================================== */
+const DAYS_IN_MONTH = 31;
+const monthIndex = 6; // julio
+const year = 2026;
+const dayLetters = ['D','L','M','X','J','V','S'];
+
+function isWeekend(day){
+  const dow = new Date(year, monthIndex, day).getDay();
+  return dow === 0 || dow === 6;
+}
+
+const ganttGrid = document.getElementById('gantt-grid');
+ganttGrid.innerHTML = '';
+
+// corner (empty top-left cell)
+const corner = document.createElement('div');
+corner.className = 'g-corner';
+ganttGrid.appendChild(corner);
+
+// header row (day numbers + weekday letters)
+for(let d=1; d<=DAYS_IN_MONTH; d++){
+  const dow = new Date(year, monthIndex, d).getDay();
+  const cell = document.createElement('div');
+  cell.className = 'g-head-cell' + (isWeekend(d) ? ' weekend' : '');
+  cell.style.gridColumn = d + 1;
+  cell.innerHTML = `<span class="g-daynum">${d}</span><span class="g-dayletter">${dayLetters[dow]}</span>`;
+  ganttGrid.appendChild(cell);
+}
+
+ganttTasks.forEach((t, idx) => {
+  const row = idx + 2; // row 1 is the header
+
+  // row label
+  const rowLabel = document.createElement('div');
+  rowLabel.className = 'g-row-label';
+  rowLabel.style.gridRow = row;
+  rowLabel.innerHTML = `<span>${t.label}<span class="sub">${t.sub}</span></span>`;
+  ganttGrid.appendChild(rowLabel);
+
+  // row background (single flat strip, so no seams appear while scrolling)
+  const rowBg = document.createElement('div');
+  rowBg.className = 'g-row-bg';
+  rowBg.style.gridRow = row;
+  ganttGrid.appendChild(rowBg);
+
+  // per-day weekend tint cells, placed on the exact same columns as the header
+  for(let d=1; d<=DAYS_IN_MONTH; d++){
+    if(isWeekend(d)){
+      const dc = document.createElement('div');
+      dc.className = 'g-daycell weekend';
+      dc.style.gridColumn = d + 1;
+      dc.style.gridRow = row;
+      ganttGrid.appendChild(dc);
+    }
+  }
+
+  if(t.diamonds){
+    t.diamonds.forEach(dm => {
+      const cell = document.createElement('div');
+      cell.className = 'g-diamond-cell';
+      cell.style.gridColumn = dm.day + 1;
+      cell.style.gridRow = row;
+      cell.setAttribute('data-tip', dm.tip);
+      const dia = document.createElement('div');
+      dia.className = 'g-diamond';
+      dia.style.background = t.color;
+      cell.appendChild(dia);
+      ganttGrid.appendChild(cell);
+    });
+  } else if(t.segments){
+    t.segments.forEach(seg => {
+      const bar = document.createElement('div');
+      bar.className = 'g-bar';
+      bar.style.gridColumn = `${seg.start+1} / ${seg.end+2}`;
+      bar.style.gridRow = row;
+      bar.style.background = t.color;
+      bar.setAttribute('data-tip', seg.tip);
+      ganttGrid.appendChild(bar);
+    });
+  } else {
+    const bar = document.createElement('div');
+    bar.className = 'g-bar';
+    bar.style.gridColumn = `${t.start+1} / ${t.end+2}`;
+    bar.style.gridRow = row;
+    bar.style.background = t.color;
+    if(t.opacity) bar.style.opacity = t.opacity;
+    bar.setAttribute('data-tip', t.tip);
+    ganttGrid.appendChild(bar);
+  }
+});
+
+// legend
+const legend = document.getElementById('gantt-legend');
+const legendSeen = new Set();
+let legendHtml = '';
+ganttTasks.forEach(t => {
+  if(legendSeen.has(t.label)) return;
+  legendSeen.add(t.label);
+  const isMilestone = !!t.diamonds;
+  legendHtml += `<span class="leg-item"><span class="leg-swatch${isMilestone?' diamond':''}" style="background:${t.color}; opacity:${t.opacity||1}"></span>${t.label}</span>`;
+});
+legendHtml += `<span class="leg-item"><span class="leg-swatch" style="background:var(--sand); border:1px solid var(--taupe)"></span>Fin de semana</span>`;
+legend.innerHTML = legendHtml;
+</script>
+</body>
+</html>
