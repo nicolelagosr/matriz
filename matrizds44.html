@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Matriz de diseño instruccional — Curso D.S. N°44</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --tarmac:#1B2733;
+    --tarmac-2:#243544;
+    --tarmac-3:#2E4356;
+    --amber:#E3A542;
+    --amber-dark:#B9812C;
+    --amber-soft:#F2C877;
+    --sky:#6FA3AD;
+    --sky-dark:#527F88;
+    --cream:#F6F2E7;
+    --sand:#ECE3CE;
+    --tan:#DCCE9F;
+    --tan-2:#D8CBAE;
+    --ink:#221F1A;
+    --ink-soft:#5B5445;
+    --ink-faint:#8D8368;
+    --white:#FFFFFF;
+    --ok:#7A9B6E;
+    --alert:#C46A4E;
+    --radius-lg:20px;
+    --radius-md:13px;
+    --radius-sm:8px;
+    --shadow:0 6px 22px rgba(27,39,51,0.10);
+    --shadow-hover:0 12px 32px rgba(27,39,51,0.18);
+    --font-display:'Space Grotesk', sans-serif;
+    --font-body:'IBM Plex Sans', sans-serif;
+    --font-mono:'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{animation-duration:0.01ms !important; transition-duration:0.01ms !important;}
+  }
+  body{
+    margin:0; font-family:var(--font-body); background:var(--cream); color:var(--ink);
+    line-height:1.55; -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;}
+  h1,h2,h3,h4{font-family:var(--font-display);}
+
+  /* ============ HEADER ============ */
+  header.top{
+    padding:50px clamp(24px,4vw,64px) 34px;
+    background:
+      radial-gradient(ellipse at 12% -20%, rgba(227,165,66,0.16), transparent 55%),
+      radial-gradient(ellipse at 100% 0%, rgba(111,163,173,0.14), transparent 50%),
+      var(--tarmac);
+    color:var(--white);
+    position:relative; overflow:hidden;
+  }
+  header.top::before{
+    content:""; position:absolute; inset:0;
+    background-image:repeating-linear-gradient(90deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 68px);
+    pointer-events:none;
+  }
+  .eyebrow{
+    display:inline-flex; align-items:center; gap:9px;
+    font-family:var(--font-mono); font-size:12px; letter-spacing:0.12em; text-transform:uppercase; font-weight:600;
+    color:var(--tarmac); background:var(--amber);
+    padding:7px 14px 6px; border-radius:100px; position:relative;
+  }
+  .eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--tarmac); animation:blink 1.6s infinite;}
+  @keyframes blink{0%,100%{opacity:1;}50%{opacity:0.25;}}
+  h1{
+    font-size:clamp(28px,3.6vw,42px); font-weight:600; margin:20px 0 10px;
+    letter-spacing:-0.01em; max-width:900px; position:relative; color:var(--white);
+  }
+  h1 .thin{font-weight:400; display:block; font-size:0.48em; letter-spacing:0.02em; color:var(--amber-soft); margin-bottom:8px; font-family:var(--font-mono); text-transform:uppercase;}
+  .lede{max-width:620px; font-size:16px; color:#C9D2D8; font-weight:300; position:relative;}
+
+  /* ============ FIDS BOARD (resumen tipo pantalla de vuelos) ============ */
+  .fids{
+    margin:38px 0 0; position:relative;
+    background:var(--tarmac-2); border-radius:var(--radius-lg);
+    border:1px solid rgba(255,255,255,0.08);
+    box-shadow:0 20px 50px rgba(0,0,0,0.35);
+    overflow:hidden;
+  }
+  .fids-head{
+    display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:10px;
+    padding:14px 20px; background:var(--tarmac-3); border-bottom:1px solid rgba(255,255,255,0.08);
+  }
+  .fids-head-title{
+    font-family:var(--font-mono); font-size:12px; letter-spacing:0.1em; text-transform:uppercase;
+    color:var(--amber-soft); font-weight:600;
+  }
+  .fids-head-meta{font-family:var(--font-mono); font-size:11.5px; color:#9FB0BA;}
+  .fids-table{width:100%; border-collapse:collapse;}
+  .fids-table thead th{
+    text-align:left; font-family:var(--font-mono); font-size:10.5px; letter-spacing:0.08em; text-transform:uppercase;
+    color:#8FA1AC; font-weight:500; padding:10px 16px; border-bottom:1px solid rgba(255,255,255,0.08);
+  }
+  .fids-row{cursor:pointer; transition:background 0.15s;}
+  .fids-row:hover{background:rgba(227,165,66,0.08);}
+  .fids-row td{padding:13px 16px; border-bottom:1px solid rgba(255,255,255,0.06); vertical-align:middle;}
+  .fids-tag{font-family:var(--font-mono); color:var(--amber); font-weight:600; font-size:13px; white-space:nowrap;}
+  .fids-icon{font-size:17px; margin-right:8px;}
+  .fids-title{color:var(--white); font-size:13.5px; font-weight:500;}
+  .fids-sub{display:block; color:#8FA1AC; font-size:11px; font-weight:300; margin-top:2px;}
+  .fids-badge{
+    display:inline-block; font-family:var(--font-mono); font-size:10.5px; font-weight:600; letter-spacing:0.04em;
+    padding:4px 10px; border-radius:100px; white-space:nowrap;
+  }
+  .fids-badge.b-recordar{background:rgba(111,163,173,0.18); color:#9FCBD4;}
+  .fids-badge.b-aplicar{background:rgba(227,165,66,0.18); color:var(--amber-soft);}
+  .fids-badge.b-analizar{background:rgba(196,106,78,0.20); color:#E39A83;}
+  .fids-badge.b-crear{background:rgba(122,155,110,0.20); color:#A9C89C;}
+  .fids-badge.b-especial{background:rgba(255,255,255,0.10); color:#C9D2D8;}
+  .fids-count{font-family:var(--font-mono); color:#C9D2D8; font-size:12.5px;}
+  .fids-foot{
+    display:flex; flex-wrap:wrap; gap:22px; padding:14px 20px;
+    background:var(--tarmac-3); border-top:1px solid rgba(255,255,255,0.08);
+    font-family:var(--font-mono); font-size:11.5px; color:#9FB0BA;
+  }
+  .fids-foot b{color:var(--amber-soft); font-weight:600;}
+  @media (max-width:760px){
+    .fids-table thead{display:none;}
+    .fids-table, .fids-table tbody, .fids-row, .fids-table td{display:block; width:100%;}
+    .fids-row{padding:12px 16px; border-bottom:1px solid rgba(255,255,255,0.06);}
+    .fids-row td{padding:2px 0; border:none;}
+  }
+
+  /* ============ TABS ============ */
+  .tabbar-wrap{
+    position:sticky; top:0; z-index:50;
+    background:rgba(246,242,231,0.95); backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--tan);
+  }
+  .tabbar{max-width:1360px; margin:0 auto; padding:0 clamp(24px,4vw,64px); display:flex; gap:6px;}
+  .tab-btn{
+    appearance:none; border:none; background:none; font-family:var(--font-body);
+    font-size:14px; font-weight:600; color:var(--ink-faint);
+    padding:16px 6px; cursor:pointer; position:relative;
+    display:flex; align-items:center; gap:8px;
+    border-bottom:3px solid transparent; transition:color 0.2s;
+  }
+  .tab-btn:hover{color:var(--ink);}
+  .tab-btn.active{color:var(--amber-dark); border-bottom-color:var(--amber);}
+  .tab-btn .n{
+    width:20px;height:20px;border-radius:50%; background:var(--tan); color:var(--ink-soft);
+    font-family:var(--font-mono); font-size:11px; display:flex; align-items:center; justify-content:center; font-weight:600;
+  }
+  .tab-btn.active .n{background:var(--amber); color:var(--tarmac);}
+
+  main{max-width:1360px; margin:0 auto; padding:0 clamp(24px,4vw,64px) 90px;}
+  .view{display:none;}
+  .view.active{display:block;}
+
+  section.intro-block{padding:38px 0 8px; max-width:760px;}
+  section.intro-block h2{font-size:21px; margin:0 0 8px; font-weight:600;}
+  section.intro-block p{color:var(--ink-soft); font-weight:300; font-size:15px;}
+
+  /* ============ MODAL ============ */
+  dialog.module-dialog{border:none; border-radius:22px; padding:0; width:min(840px,92vw); max-height:86vh; box-shadow:0 24px 70px rgba(0,0,0,0.35);}
+  dialog.module-dialog[open]{display:flex; flex-direction:column;}
+  dialog.module-dialog::backdrop{background:rgba(27,39,51,0.6); backdrop-filter:blur(2px);}
+  .dlg-head{
+    display:flex; align-items:center; gap:14px; padding:20px 26px;
+    background:var(--tarmac); color:var(--white); flex:0 0 auto; border-radius:22px 22px 0 0;
+  }
+  .dlg-icon{width:46px;height:46px;border-radius:13px; background:var(--amber); color:var(--tarmac); display:flex; align-items:center; justify-content:center; font-size:22px; flex:0 0 auto;}
+  .dlg-headtext{flex:1; min-width:0;}
+  .dlg-eyebrow{font-family:var(--font-mono); font-size:10.5px; font-weight:600; letter-spacing:0.09em; text-transform:uppercase; color:var(--amber-soft);}
+  .dlg-title{font-size:18px; font-weight:600; margin-top:3px;}
+  .dlg-bloom{display:inline-block; margin-top:6px; font-family:var(--font-mono); font-size:10px; letter-spacing:0.05em; color:#C9D2D8;}
+  .dlg-close{appearance:none; border:1.5px solid rgba(255,255,255,0.25); background:transparent; cursor:pointer; width:32px;height:32px;border-radius:50%; font-size:14px; color:#C9D2D8; flex:0 0 auto;}
+  .dlg-close:hover{border-color:var(--amber); color:var(--amber-soft);}
+  .dlg-content{padding:24px 26px 20px; overflow-y:auto; flex:1 1 auto; min-height:0;}
+  .pb-grid{display:grid; grid-template-columns:1.1fr 1fr; gap:26px;}
+  @media (max-width:640px){.pb-grid{grid-template-columns:1fr;}}
+  .pb-block h4{font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--amber-dark); font-weight:600; margin:0 0 8px;}
+  .pb-block p{font-size:14.5px; color:var(--ink-soft); font-weight:300; margin:0 0 14px;}
+  .temario-list{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px;}
+  .temario-list li{font-size:14px; font-weight:400; color:var(--ink); background:var(--sand); padding:9px 13px; border-radius:var(--radius-sm); display:flex; gap:9px; align-items:baseline;}
+  .temario-list li::before{content:""; width:6px;height:6px;flex:0 0 auto; border-radius:50%; background:var(--amber-dark); margin-top:6px;}
+  .resources-title{font-family:var(--font-mono); font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--amber-dark); font-weight:600; margin:24px 0 12px;}
+  .resource-grid{display:grid; grid-template-columns:repeat(auto-fill, minmax(220px,1fr)); gap:12px; padding-bottom:26px;}
+  .res-card{background:var(--sand); border:1px solid var(--tan-2); border-radius:var(--radius-md); padding:15px; cursor:pointer;}
+  .res-card:hover{border-color:var(--amber);}
+  .res-top{display:flex; align-items:center; gap:9px;}
+  .res-icon{font-size:18px;}
+  .res-title{font-size:13.5px; font-weight:600; flex:1;}
+  .res-plus{font-size:16px; color:var(--amber-dark); font-weight:700; transition:transform 0.2s;}
+  .res-card.open .res-plus{transform:rotate(45deg);}
+  .res-snippet{font-size:12.5px; color:var(--ink-faint); font-weight:300; margin-top:7px;}
+  .res-card.open .res-snippet{display:none;}
+  .res-full{display:none; margin-top:9px; font-size:13px; color:var(--ink-soft); font-weight:300;}
+  .res-card.open .res-full{display:block;}
+  .res-full .lbl{font-family:var(--font-mono); font-size:10px; text-transform:uppercase; letter-spacing:0.06em; color:var(--amber-dark); font-weight:600; margin:9px 0 3px;}
+  .res-full .lbl:first-child{margin-top:0;}
+  .dlg-nav{display:flex; justify-content:space-between; align-items:center; padding:14px 26px; border-top:1px solid var(--tan); background:var(--sand); flex:0 0 auto; border-radius:0 0 22px 22px;}
+  .dlg-nav-btn{appearance:none; border:1.5px solid var(--tan-2); background:var(--white); cursor:pointer; font-family:var(--font-body); font-size:13px; font-weight:600; color:var(--ink); padding:8px 15px; border-radius:100px; display:flex; align-items:center; gap:6px;}
+  .dlg-nav-btn:hover{border-color:var(--amber); color:var(--amber-dark);}
+  .dlg-nav-btn:disabled{opacity:0.35; cursor:default;}
+  .dlg-pos{font-family:var(--font-mono); font-size:12px; color:var(--ink-faint); font-weight:500;}
+
+  /* ============ GANTT ============ */
+  .gantt-wrap{padding-top:30px;}
+  .gantt-legend{display:flex; flex-wrap:wrap; gap:16px 22px; margin:18px 0 26px; font-size:13px; color:var(--ink-soft); font-weight:300;}
+  .leg-item{display:flex; align-items:center; gap:7px;}
+  .leg-swatch{width:13px;height:13px;border-radius:4px;}
+  .leg-swatch.diamond{border-radius:3px; transform:rotate(45deg);}
+  .gantt-card{background:var(--white); border:1px solid var(--tan-2); border-radius:var(--radius-lg); padding:26px 22px 30px; overflow-x:auto; box-shadow:var(--shadow);}
+  .gantt-grid{display:grid; grid-template-columns:230px repeat(24, minmax(30px,1fr)); grid-template-rows:54px; grid-auto-rows:38px; min-width:900px; row-gap:8px; column-gap:0; position:relative;}
+  .g-corner{grid-column:1; grid-row:1; position:sticky; left:0; background:var(--white); z-index:5;}
+  .g-daynum{text-align:center; font-family:var(--font-mono); font-size:11px; color:var(--ink-faint); font-weight:600;}
+  .g-dayletter{text-align:center; font-weight:400; color:var(--ink-faint); font-size:10px;}
+  .g-monthtag{text-align:center; font-family:var(--font-mono); font-size:9px; letter-spacing:0.06em; text-transform:uppercase; font-weight:700; color:var(--amber-dark); visibility:hidden; line-height:1;}
+  .g-monthtag.show{visibility:visible;}
+  .g-head-cell{grid-row:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; gap:1px; padding-bottom:6px; border-bottom:1.5px solid var(--tan-2); align-self:end;}
+  .g-head-cell.weekend{background:var(--sand); border-radius:6px 6px 0 0;}
+  .g-head-cell.today{background:rgba(227,165,66,0.18); border-radius:6px 6px 0 0;}
+  .g-head-cell.month-start{border-left:2px dashed var(--amber-dark);}
+  .g-monthdivider{grid-column:span 1; align-self:stretch; border-left:2px dashed var(--tan-2); z-index:2;}
+  .g-row-label{grid-column:1; font-size:13px; font-weight:600; color:var(--ink); display:flex; align-items:center; padding:8px 14px 8px 0; position:sticky; left:0; background:var(--white); z-index:5;}
+  .g-row-label .sub{display:block; font-weight:300; font-size:11px; color:var(--ink-faint); margin-top:2px;}
+  .g-row-bg{grid-column:2/33; background:var(--cream); border-radius:8px; align-self:stretch; z-index:0;}
+  .g-daycell{align-self:stretch; z-index:1; border-right:1px solid var(--tan-2);}
+  .g-daycell.weekend{background:rgba(220,206,159,0.28);}
+  .g-bar{align-self:center; height:24px; border-radius:7px; box-shadow:0 2px 6px rgba(27,39,51,0.18); cursor:default; z-index:3; margin:0 2px;}
+  .g-diamond-cell{align-self:center; justify-self:center; z-index:3; position:relative; height:34px; width:100%;}
+  .g-diamond{position:absolute; top:50%; left:50%; width:19px; height:19px; transform:translate(-50%,-50%) rotate(45deg); border-radius:4px; box-shadow:0 2px 6px rgba(27,39,51,0.28); border:2px solid var(--white);}
+  .g-bar:hover::after, .g-diamond-cell:hover::after{
+    content:attr(data-tip); position:absolute; bottom:130%; left:0;
+    background:var(--tarmac); color:var(--white); font-size:11.5px; font-weight:400;
+    padding:8px 11px; border-radius:8px; white-space:normal; width:230px; z-index:20;
+    box-shadow:0 6px 18px rgba(0,0,0,0.3);
+  }
+  .g-diamond-cell:hover::after{left:-50%;}
+  .gantt-note{margin-top:20px; font-size:13px; color:var(--ink-faint); font-weight:300; background:var(--sand); border-radius:var(--radius-md); padding:14px 16px; max-width:800px;}
+
+  footer{text-align:center; padding:40px clamp(24px,4vw,64px) 60px; color:var(--ink-faint); font-size:12.5px; font-weight:300; font-family:var(--font-mono);}
+  :focus-visible{outline:2.5px solid var(--amber-dark); outline-offset:2px;}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <span class="eyebrow"><span class="dot"></span>Torre de control · Diseño instruccional</span>
+  <h1><span class="thin">Matriz de diseño instruccional</span>Curso D.S. N°44 — Gestión Preventiva de Riesgos Laborales</h1>
+  <p class="lede">Revisa el panel de vuelos para un resumen rápido, o haz clic en cualquier módulo para abrir su detalle.</p>
+</header>
+
+<div class="tabbar-wrap">
+  <div class="tabbar">
+    <button class="tab-btn active" data-tab="panel"><span class="n">1</span> Panel de vuelos</button>
+    <button class="tab-btn" data-tab="gantt"><span class="n">2</span> Carta Gantt del proyecto</button>
+  </div>
+</div>
+
+<main>
+  <!-- ============ VISTA: PANEL DE VUELOS ============ -->
+  <div class="view active" id="view-panel">
+    <!-- ============ FIDS: PANEL DE VUELOS (resumen ejecutivo) ============ -->
+    <div class="fids" id="fidsBoard">
+      <div class="fids-head">
+        <span class="fids-head-title">Panel de módulos — resumen del curso</span>
+        <span class="fids-head-meta" id="fidsMeta"></span>
+      </div>
+      <table class="fids-table">
+        <thead>
+          <tr><th>Vuelo</th><th>Módulo</th><th>Nivel Bloom</th><th>Cápsulas</th><th>Recursos</th></tr>
+        </thead>
+        <tbody id="fidsBody"></tbody>
+      </table>
+      <div class="fids-foot" id="fidsFoot"></div>
+    </div>
+  </div>
+
+  <!-- ============ VISTA: GANTT ============ -->
+  <div class="view" id="view-gantt">
+    <section class="intro-block">
+      <h2>Planificación del proyecto — julio 2026</h2>
+      <p>Entregas, ciclos de revisión y desarrollo de materiales, desde el kickoff del martes 14 de julio hasta la codificación final del curso.</p>
+    </section>
+
+    <div class="gantt-wrap">
+      <div class="gantt-legend" id="gantt-legend"></div>
+      <div class="gantt-card">
+        <div class="gantt-grid" id="gantt-grid"></div>
+      </div>
+      <div class="gantt-note">
+        <strong>Sobre el calendario:</strong> parte el martes 14 de julio. Diseño Instruccional entrega la primera versión del guion este viernes 17. La contraparte revisa solo en días hábiles (20–21 de julio, ronda 1; 24 de julio, ronda 2), por lo que los ajustes y la entrega final del guion se corren a la semana siguiente (27 de julio). Por el mismo motivo, la codificación final no alcanza a cerrarse dentro de julio: la última tanda queda para el lunes 3 y martes 4 de agosto, ya que el 1 y 2 de agosto son fin de semana. El calendario se extiende entonces hasta esa fecha.
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer>Matriz de diseño instruccional · Curso D.S. N°44 · Gestión Preventiva de Riesgos Laborales</footer>
+
+<!-- ============ MODAL ============ -->
+<dialog class="module-dialog" id="moduleDialog">
+  <div class="dlg-head">
+    <div class="dlg-icon" id="dlgIcon"></div>
+    <div class="dlg-headtext">
+      <div class="dlg-eyebrow" id="dlgEyebrow"></div>
+      <div class="dlg-title" id="dlgTitle"></div>
+      <div class="dlg-bloom" id="dlgBloom"></div>
+    </div>
+    <button class="dlg-close" id="dlgClose" aria-label="Cerrar">✕</button>
+  </div>
+  <div class="dlg-content" id="dlgContent"></div>
+  <div class="dlg-nav">
+    <button class="dlg-nav-btn" id="dlgPrev">← Anterior</button>
+    <span class="dlg-pos" id="dlgPos"></span>
+    <button class="dlg-nav-btn" id="dlgNext">Siguiente →</button>
+  </div>
+</dialog>
+
+<script>
+/* ======================================================
+   DATA — MÓDULOS DEL CURSO
+====================================================== */
+const modules = [
+{
+  id:'m0', tag:'VUELO 000', kind:'special', kindLabel:'Apertura', bloom:'Enganche inicial', icon:'🛫',
+  title:'Bienvenida', shortTitle:'Bienvenida',
+  hook:'Un aeropuerto despertando: counter, rampa, torre de control, y una pregunta que casi nadie sabe responder.',
+  purpose:'Captar la atención del participante desde el primer segundo, presentando el hilo conductor (Renata y Tomás) y anticipando lo que recorrerá el curso.',
+  outcome:'Reconocer por qué el D.S. N°44 le importa en su trabajo diario, y ubicarse en la ruta que seguirá durante el curso.',
+  temario:['¿Por qué te importa el D.S. N°44?','Qué aprenderás en este curso','Cómo se estructura tu recorrido'],
+  resources:[
+    {icon:'🎥', title:'Cápsula de bienvenida',
+     snippet:'Montaje rápido del aeropuerto y presentación de Renata a cámara.',
+     full:'Planos rápidos de distintas zonas del aeropuerto (counter, rampa, cintas de equipaje), que cierran con Renata presentándose a cámara y adelantando que Tomás, recién asumido como supervisor, guiará el aprendizaje junto al participante.',
+     purposeText:'Generar enganche inmediato e instalar el hilo conductor narrativo de todo el curso.'}
+  ]
+},
+{
+  id:'m1', tag:'VUELO 001', kind:'normal', kindLabel:'Módulo 1', bloom:'Recordar → Comprender', icon:'🗼',
+  title:'Antes de despegar: el marco que nos protege a todos', shortTitle:'El marco que nos protege',
+  hook:'Un pasajero molesto, un formulario nuevo, y nadie sabe explicar por qué cambió todo.',
+  purpose:'Introducir el marco normativo del D.S. N°44, el deber de protección y los principios de la actividad preventiva, junto a los actores del sistema de seguridad y salud en el trabajo.',
+  outcome:'Reconocer el alcance del D.S. N°44, sus principios rectores y el rol de cada actor del sistema de SST, aplicándolos a situaciones cotidianas del lugar de trabajo.',
+  temario:['Qué cambia con el D.S. N°44 (origen, contexto y vigencia)','Deber de protección y principios de la actividad preventiva','Roles y obligaciones de empleador y trabajadores','Actores del sistema de SST (Organismo Administrador, DT, autoridad sanitaria)'],
+  resources:[
+    {icon:'🎥', title:'Cápsulas (3)',
+     snippet:'Counter, rampa y sala de coordinación — tres escenas con elenco rotativo.',
+     full:'Tres cápsulas conectadas por Renata y Tomás: en el counter surge la primera pregunta sobre el D.S. N°44; en la rampa, un descuido con protectores auditivos permite explicar el deber de protección y sus principios; en la sala de coordinación se cierra explicando quién es quién en el sistema de SST.',
+     purposeText:'Contextualizar el marco normativo a partir de situaciones cotidianas y reconocibles, sin recurrir a personajes-concepto.'},
+    {icon:'📊', title:'Infografía — "Línea de tiempo del D.S. N°44"',
+     snippet:'De 1969 a hoy: hitos normativos y relación con otras leyes.',
+     full:'Línea de tiempo visual con los D.S. N°40/54 (1969), la publicación del D.S. N°44 y su entrada en vigencia (2025), su relación con la Ley N°16.744 y el Código del Trabajo, y su ámbito de aplicación.',
+     purposeText:'Facilitar la comprensión del marco legal y entregar un recurso de consulta rápida.'},
+    {icon:'🛠️', title:'Actividad hands-on — "Identifica el principio"',
+     snippet:'4 situaciones del aeropuerto para reconocer cada principio preventivo.',
+     full:'El participante revisa 4 situaciones breves de distintas áreas del aeropuerto e identifica qué principio de la actividad preventiva se aplica o vulnera en cada una: origen del riesgo, participación activa, enfoque de género o mejora continua.',
+     purposeText:'Favorecer el reconocimiento práctico de los principios antes de aplicarlos a casos más complejos.'},
+    {icon:'📄', title:'PDF Complementario',
+     snippet:'Marco legal completo, deber de protección y casos aplicados de otros rubros.',
+     full:'Desarrollo en profundidad de la relación normativa con la Ley N°16.744 y el Código del Trabajo, consecuencias del incumplimiento del deber de protección, potestades de cada organismo fiscalizador, y una sección de casos aplicados en rubros distintos al aeroportuario.',
+     purposeText:'Profundizar los contenidos sin repetir lo ya visto en cápsulas e infografía, sumando casos nuevos.'},
+    {icon:'📝', title:'Resumen', snippet:'Síntesis de los conceptos clave del módulo.',
+     full:'Síntesis del origen del decreto, el deber de protección, sus principios y los actores del sistema de SST.',
+     purposeText:'Facilitar el repaso previo a la evaluación.'},
+    {icon:'📖', title:'Glosario', snippet:'Términos clave: deber de protección, riesgo, incidente, entre otros.',
+     full:'Definiciones de deber de protección, entidad empleadora, Ley N°16.744, Organismo Administrador, principios de la actividad preventiva, riesgo, riesgo grave e inminente, entre otros.',
+     purposeText:'Homogeneizar el lenguaje técnico utilizado a lo largo del curso.'},
+    {icon:'✔️', title:'Evaluación Modular', snippet:'7 casos de opción múltiple, ambientados en distintos rubros.',
+     full:'7 casos de opción múltiple con retroalimentación explicativa, con contextos variados (no solo el aeropuerto) y nivel de dificultad parejo entre alternativas.',
+     purposeText:'Verificar la comprensión de los fundamentos necesarios para avanzar en el curso.'}
+  ]
+},
+{
+  id:'m2', tag:'VUELO 002', kind:'normal', kindLabel:'Módulo 2', bloom:'Comprender → Aplicar', icon:'🧭',
+  title:'La estructura que sostiene cada operación', shortTitle:'La estructura preventiva',
+  hook:'El chaleco reflectante no basta si nadie coordinó los riesgos con quien trabaja al lado tuyo.',
+  purpose:'Desarrollar competencias para construir el sistema de gestión preventiva: MIPER participativa, prelación de medidas, SG-SST y estructura preventiva según tamaño de empresa.',
+  outcome:'Construir una MIPER de forma participativa, aplicar correctamente la prelación de medidas preventivas y el ciclo PHVA, y reconocer la estructura preventiva que corresponde según el tamaño de una organización.',
+  temario:['Identificación de peligros y MIPER participativa','Programa de trabajo preventivo, prelación de medidas y ciclo PHVA','Política de SST, RIOHS y coordinación con empresas contratistas','Estructura preventiva y elección digital del CPHS'],
+  resources:[
+    {icon:'🎥', title:'Cápsulas (4)',
+     snippet:'Rampa, bodega de carga, oficina y comedor — construcción del sistema preventivo.',
+     full:'El equipo construye la MIPER de forma participativa en la rampa; en la bodega se resuelve una carga mal estibada, que sirve para explicar la prelación de medidas y el ciclo PHVA; en la oficina se coordina con una empresa contratista; y en el comedor se vive la elección digital del CPHS junto al resto de la estructura preventiva.',
+     purposeText:'Mostrar la construcción del sistema de gestión como un proceso colaborativo, no una tarea individual del Encargado de Prevención.'},
+    {icon:'📊', title:'Infografía — "Cómo se construye una MIPER"',
+     snippet:'Paso a paso visual: identificar, evaluar, controlar, registrar y actualizar.',
+     full:'Cinco pasos de la construcción de la MIPER, con énfasis visual en la participación de los trabajadores en cada etapa del proceso.',
+     purposeText:'Entregar un recurso visual de consulta rápida para replicar el proceso en el propio lugar de trabajo.'},
+    {icon:'🛠️', title:'Actividad hands-on — "Prioriza las medidas preventivas"',
+     snippet:'5 situaciones de riesgo para aplicar la prelación y el ciclo PHVA.',
+     full:'El participante identifica el tipo de medida preventiva aplicada en 5 situaciones del aeropuerto (eliminación, sustitución, control o EPP) y en qué etapa del ciclo PHVA se encuentra cada una, con retroalimentación explicativa caso por caso.',
+     purposeText:'Desarrollar la capacidad de priorizar medidas preventivas frente a un riesgo real.'},
+    {icon:'📄', title:'PDF Complementario',
+     snippet:'SG-SST, coordinación con contratistas (D.S. N°76) y casos aplicados.',
+     full:'Profundización en la clasificación de riesgos, el SG-SST (política y RIOHS), la relación entre el D.S. N°44 y el D.S. N°76 en subcontratación, la estructura preventiva completa, y una sección de casos aplicados de otros rubros.',
+     purposeText:'Sumar contenido nuevo sin repetir lo ya cubierto en infografía y actividad práctica.'},
+    {icon:'📝', title:'Resumen', snippet:'Síntesis de la gestión de riesgos y la estructura preventiva.',
+     full:'Síntesis de la MIPER participativa, la prelación de medidas, el ciclo PHVA, el SG-SST y la estructura preventiva según tamaño de empresa.',
+     purposeText:'Facilitar el repaso previo a la evaluación.'},
+    {icon:'📖', title:'Glosario', snippet:'MIPER, PHVA, RIOHS, CPHS, concurrencia de empleadores, entre otros.',
+     full:'Definiciones de MIPER, ciclo PHVA, prelación de medidas preventivas, política de SST, RIOHS, concurrencia de empleadores, CPHS, Delegado de SST, Departamento de Prevención y Encargado de Prevención.',
+     purposeText:'Consolidar la terminología de gestión de riesgos y estructura organizacional.'},
+    {icon:'✔️', title:'Evaluación Modular', snippet:'7 casos de opción múltiple, ambientados en distintos rubros.',
+     full:'7 casos de opción múltiple con retroalimentación explicativa, integrando MIPER, prelación, PHVA, SG-SST y estructura preventiva.',
+     purposeText:'Comprobar la capacidad de aplicar correctamente las herramientas de gestión revisadas.'}
+  ]
+},
+{
+  id:'m3', tag:'VUELO 003', kind:'normal', kindLabel:'Módulo 3', bloom:'Aplicar → Analizar', icon:'🚨',
+  title:'Cuando las cosas no salen según el plan', shortTitle:'Cuando algo no sale bien',
+  hook:'Un grito a tiempo detiene un accidente. Lo que pasa después decide si vuelve a ocurrir.',
+  purpose:'Desarrollar competencias para vigilar la salud de los trabajadores, reaccionar ante emergencias, investigar incidentes con metodología de árbol de causas, y aplicar el sistema de capacitación exigido por el decreto.',
+  outcome:'Aplicar correctamente la vigilancia de la salud según el riesgo del puesto, reaccionar ante un riesgo grave e inminente, investigar un incidente identificando su causa raíz, y diferenciar el deber de informar de la capacitación formal.',
+  temario:['Vigilancia del ambiente y de la salud (protocolos ministeriales)','Riesgo grave e inminente y gestión de emergencias','Investigación de incidentes con árbol de causas','Deber de informar y sistema de capacitación','Protocolo de acoso laboral y Ley Karin'],
+  resources:[
+    {icon:'🎥', title:'Cápsulas (4)',
+     snippet:'Hangar, rampa, sala de inducción y RR.HH. — vigilancia, emergencia e investigación.',
+     full:'En el hangar de mantenimiento se vive la vigilancia de la salud a través de Pablo, mecánico con años de experiencia; en la rampa ocurre un cuasi-accidente que se investiga con árbol de causas; en la sala de inducción se distingue el deber de informar de la capacitación formal; y en RR.HH. se activa el protocolo de Ley Karin.',
+     purposeText:'Generar tensión narrativa real y mostrar la respuesta correcta ante situaciones de riesgo en tiempo real.'},
+    {icon:'📊', title:'Infografía — "Mapa de protocolos ministeriales"',
+     snippet:'TMERT, ruido (PREXOR), sílice (PLANESI) y riesgos psicosociales (ISTAS21).',
+     full:'Qué mide cada protocolo ministerial y en qué tipo de puestos aplica, con alcance transversal a distintos rubros, no solo el aeroportuario.',
+     purposeText:'Entregar un recurso visual de consulta rápida para identificar qué protocolo corresponde a cada riesgo.'},
+    {icon:'💻', title:'Actividad SCORM — "Alerta en rampa"',
+     snippet:'Simulador de decisión en tiempo real ante un riesgo grave e inminente.',
+     full:'Simulación de 3 pantallas: decisión inmediata frente a un riesgo grave e inminente, registro correcto del incidente, y ejercicio interactivo de árbol de causas arrastrando los datos a su nivel correspondiente.',
+     purposeText:'Favorecer el aprendizaje experiencial mediante decisiones bajo presión de tiempo, similares al desempeño real.'},
+    {icon:'📄', title:'PDF Complementario',
+     snippet:'Traslado de puesto, capacitaciones, Ley Karin y prestaciones de la Ley N°16.744.',
+     full:'Profundización en el traslado de puesto de trabajo, el plan de gestión de emergencias, la investigación de enfermedades profesionales, el detalle completo de horas de capacitación por rol, las prestaciones de la Ley N°16.744, el procedimiento del protocolo Ley Karin, y casos aplicados de otros rubros.',
+     purposeText:'Concentrar todo el contenido de profundización que no requiere estar en el flujo principal de las cápsulas.'},
+    {icon:'📝', title:'Resumen', snippet:'Síntesis de vigilancia, emergencias, investigación y capacitación.',
+     full:'Síntesis de la vigilancia de la salud, la reacción ante riesgo grave e inminente, el árbol de causas, el sistema de capacitación y el protocolo Ley Karin.',
+     purposeText:'Facilitar el repaso previo a la evaluación.'},
+    {icon:'📖', title:'Glosario', snippet:'Árbol de causas, deber de informar, Ley Karin, TMERT, PREXOR, entre otros.',
+     full:'Definiciones de árbol de causas, deber de informar, Ley Karin, PLANESI, PREXOR, protocolo de riesgos psicosociales, riesgo grave e inminente, TMERT, traslado de puesto y vigilancia de la salud.',
+     purposeText:'Consolidar la terminología técnica de vigilancia, emergencias e investigación.'},
+    {icon:'✔️', title:'Evaluación Modular', snippet:'7 casos de opción múltiple, ambientados en distintos rubros.',
+     full:'7 casos de opción múltiple con retroalimentación explicativa, integrando vigilancia, riesgo grave e inminente, árbol de causas, capacitación y Ley Karin.',
+     purposeText:'Comprobar la capacidad de reaccionar e investigar correctamente frente a situaciones de riesgo.'}
+  ]
+},
+{
+  id:'m4', tag:'VUELO 004', kind:'normal', kindLabel:'Módulo 4', bloom:'Analizar → Evaluar → Crear', icon:'🛬',
+  title:'Aterrizaje seguro: del cumplimiento a la mejora continua', shortTitle:'Del cumplimiento a la mejora',
+  hook:'La fiscalización no avisa dos veces. La pregunta es si tu sistema ya estaba listo.',
+  purpose:'Desarrollar competencias para enfrentar una fiscalización, evaluar críticamente el sistema de gestión preventiva, e integrar todo lo aprendido en un plan de acción concreto.',
+  outcome:'Prepararse ante una fiscalización del D.S. N°44, identificar brechas de cumplimiento incorporando el enfoque de género, y elaborar un plan de acción preventivo que integre todo el sistema de gestión.',
+  temario:['Fiscalización y cumplimiento legal','Evaluación crítica del sistema e indicadores de gestión','Aplicación integrada del sistema preventivo y plan de acción'],
+  resources:[
+    {icon:'🎥', title:'Cápsulas (3)',
+     snippet:'Oficina central, oficina de Renata y pista — fiscalización y cierre técnico.',
+     full:'Llega el Inspector Rojas a fiscalizar el cumplimiento del D.S. N°44; luego, en la oficina de Renata, se detecta una brecha en indicadores desagregados por género; y en la pista, al atardecer, Tomás lidera la construcción de un plan de acción preventivo.',
+     purposeText:'Cerrar el arco de aprendizaje de Tomás, quien pasa de tener puras preguntas a liderar decisiones con criterio propio.'},
+    {icon:'📊', title:'Infografía — "Checklist de fiscalización"',
+     snippet:'6 documentos que conviene tener siempre al día, no solo ante una visita.',
+     full:'MIPER actualizada, programa de trabajo preventivo, actas del CPHS, registros de capacitación, coordinación con contratistas y protocolo de Ley Karin.',
+     purposeText:'Entregar un recurso visual de consulta rápida para la preparación continua ante fiscalizaciones.'},
+    {icon:'💻', title:'Actividad SCORM — "Simulador de auditoría"',
+     snippet:'Detectar brechas de cumplimiento en un área ficticia del aeropuerto.',
+     full:'Simulación de 3 pantallas: identificar la brecha más grave en una carpeta de documentación, priorizar la corrección, y ordenar la respuesta según el ciclo PHVA.',
+     purposeText:'Favorecer el aprendizaje experiencial de auditoría interna antes de enfrentar una fiscalización real.'},
+    {icon:'📄', title:'PDF Complementario',
+     snippet:'Consecuencias del incumplimiento, indicadores, brechas y aplicación integrada.',
+     full:'Profundización en los tipos de consecuencias ante una fiscalización, indicadores de gestión concretos, identificación de brechas, enfoque de género en la evaluación, y una sección final que conecta el D.S. N°44 con el D.S. N°76, la Ley N°16.744, el Código del Trabajo y la Ley Karin.',
+     purposeText:'Cerrar el curso con una mirada integradora de todo el sistema normativo revisado.'},
+    {icon:'📝', title:'Resumen', snippet:'Síntesis de fiscalización, evaluación crítica y mejora continua.',
+     full:'Síntesis de la fiscalización, los indicadores de gestión, la identificación de brechas, el enfoque de género y la aplicación integrada del sistema preventivo.',
+     purposeText:'Facilitar el repaso previo a la evaluación final.'},
+    {icon:'📖', title:'Glosario', snippet:'Brecha de cumplimiento, fiscalización, indicador de gestión, entre otros.',
+     full:'Definiciones de autoridad sanitaria, brecha de cumplimiento, Dirección del Trabajo, enfoque de género en la evaluación, fiscalización, indicador de gestión, mejora continua, paralización de faenas y plan de acción preventivo.',
+     purposeText:'Consolidar la terminología de cumplimiento y mejora continua.'},
+    {icon:'✔️', title:'Evaluación Final del Curso', snippet:'10 casos de opción múltiple que integran todo lo aprendido.',
+     full:'10 casos de opción múltiple con retroalimentación explicativa, de mayor complejidad, que integran conceptos de los 4 módulos del curso.',
+     purposeText:'Verificar la capacidad de aplicar de forma integrada todo el sistema de gestión preventiva.'}
+  ]
+},
+{
+  id:'m5', tag:'VUELO 005', kind:'special', kindLabel:'Cierre', bloom:'Síntesis final', icon:'🎓',
+  title:'Lo que queda cuando el avión despega', shortTitle:'Cierre del curso',
+  hook:'Pista del aeropuerto, atardecer: Renata y Tomás miran despegar un avión.',
+  purpose:'Cerrar el recorrido del curso, reforzando que la gestión preventiva es un sistema vivo y no una serie de trámites puntuales.',
+  outcome:'Reconocer los recursos disponibles para volver a consultar durante su trabajo diario, y comprometerse con la mejora continua del sistema preventivo de su organización.',
+  temario:['Lo que recorrimos: del marco normativo a la mejora continua','Recursos disponibles para seguir consultando','Cierre y despedida'],
+  resources:[
+    {icon:'🎥', title:'Cápsula de cierre',
+     snippet:'Renata y Tomás cierran el recorrido en la pista, al atardecer.',
+     full:'Tomás reflexiona sobre su propio recorrido de aprendizaje, y Renata invita al participante a volver a las infografías, PDF y actividades cada vez que las necesite en su trabajo diario.',
+     purposeText:'Cerrar el arco narrativo y reforzar que la prevención es un sistema vivo, no un curso que termina y se olvida.'}
+  ]
+}
+];
+
+/* ======================================================
+   GANTT DATA — julio–agosto 2026 (kickoff: martes 14 de julio)
+   La contraparte solo revisa en días hábiles; por eso el
+   calendario se extiende hasta la primera semana de agosto.
+====================================================== */
+const ganttTasks = [
+  {label:'Entrega de matriz y carta Gantt', sub:'Diseño Instruccional', start:'2026-07-14', end:'2026-07-15', color:'var(--amber)',
+   tip:'14 y 15 de julio (martes y miércoles) · Entrega de la matriz de diseño instruccional y la carta Gantt del proyecto.'},
+  {label:'Guion — versión 1', sub:'Diseño Instruccional', start:'2026-07-14', end:'2026-07-17', color:'var(--tan-2)',
+   tip:'14 al 17 de julio (martes a viernes) · Desarrollo y primera entrega de la versión 1 del guion de storytelling.'},
+  {label:'Revisión de contraparte', sub:'2 rondas · solo días hábiles', segments:[
+      {start:'2026-07-20', end:'2026-07-21', tip:'Ronda 1 · 20 y 21 de julio (lunes y martes) · Observaciones de contraparte sobre la versión 1 del guion. No se revisa en fin de semana.'},
+      {start:'2026-07-24', end:'2026-07-24', tip:'Ronda 2 · 24 de julio (viernes) · Observaciones de contraparte sobre los ajustes de Diseño Instruccional.'}
+    ], color:'var(--alert)'},
+  {label:'Ajustes DI', sub:'Diseño Instruccional', start:'2026-07-22', end:'2026-07-23', color:'var(--ok)',
+   tip:'22 y 23 de julio (miércoles y jueves) · Diseño Instruccional ajusta el guion a partir de las observaciones de la ronda 1.'},
+  {label:'Guion — entrega final', sub:'Versión final del guion', diamonds:[
+      {date:'2026-07-27', tip:'27 de julio (lunes) · Entrega de la versión final del guion, primer día hábil tras la validación del viernes 24.'}
+    ], color:'var(--amber-dark)'},
+  {label:'Material complementario', sub:'DI · en paralelo', start:'2026-07-17', end:'2026-07-31', color:'var(--sky)',
+   tip:'17 al 31 de julio · Desarrollo de infografías, PDF, actividades hands-on/SCORM, resúmenes, glosarios y evaluaciones, en paralelo a los ciclos de revisión del guion.'},
+  {label:'Material SENCE', sub:'Documentación y formato', start:'2026-07-28', end:'2026-07-30', color:'var(--sky-dark)',
+   tip:'28 al 30 de julio (martes a jueves) · Preparación de la documentación y el material en formato SENCE.'},
+  {label:'Codificación', sub:'Montaje del curso e-learning · solo días hábiles', segments:[
+      {start:'2026-07-31', end:'2026-07-31', tip:'31 de julio (viernes) · Inicio de la codificación y montaje del curso.'},
+      {start:'2026-08-03', end:'2026-08-04', tip:'3 y 4 de agosto (lunes y martes) · Cierre de la codificación final. El 1 y 2 de agosto son fin de semana, por eso el calendario se extiende hasta acá.'}
+    ], color:'var(--tarmac)'}
+];
+const GANTT_START = '2026-07-14'; // martes 14 de julio — inicio del calendario
+const GANTT_END = '2026-08-06';   // jueves 6 de agosto — cierre con margen de holgura
+const START_MARK = '2026-07-14';  // fecha que se resalta como inicio del proyecto
+
+/* ======================================================
+   RENDER: FIDS BOARD
+====================================================== */
+const bloomClass = (b) => {
+  if(b.includes('Recordar')) return 'b-recordar';
+  if(b.includes('Aplicar') && !b.includes('Analizar')) return 'b-aplicar';
+  if(b.includes('Analizar') && !b.includes('Crear')) return 'b-analizar';
+  if(b.includes('Crear')) return 'b-crear';
+  return 'b-especial';
+};
+const fidsBody = document.getElementById('fidsBody');
+let totalCapsulas = 0, totalRecursos = 0;
+modules.forEach((m, i) => {
+  const capMatch = m.resources.find(r => /Cápsula/.test(r.title));
+  let capCount = '1';
+  if(capMatch){
+    const mNum = capMatch.title.match(/\((\d+)\)/);
+    capCount = mNum ? mNum[1] : '1';
+  }
+  totalCapsulas += parseInt(capCount, 10);
+  totalRecursos += m.resources.length;
+  const row = document.createElement('tr');
+  row.className = 'fids-row';
+  row.dataset.idx = i;
+  row.innerHTML = `
+    <td class="fids-tag">${m.tag}</td>
+    <td><span class="fids-icon">${m.icon}</span><span class="fids-title">${m.shortTitle}</span><span class="fids-sub">${m.kindLabel}</span></td>
+    <td><span class="fids-badge ${bloomClass(m.bloom)}">${m.bloom}</span></td>
+    <td class="fids-count">${capCount}</td>
+    <td class="fids-count">${m.resources.length}</td>`;
+  fidsBody.appendChild(row);
+});
+document.getElementById('fidsMeta').textContent = `${modules.length} vuelos programados`;
+document.getElementById('fidsFoot').innerHTML = `
+  <span><b>${modules.length}</b> módulos (incl. apertura y cierre)</span>
+  <span><b>${totalCapsulas}</b> cápsulas narrativas</span>
+  <span><b>${totalRecursos}</b> recursos totales</span>
+  <span><b>D.S. N°44</b> — vigente desde el 1 de febrero de 2025</span>`;
+fidsBody.addEventListener('click', (e) => {
+  const row = e.target.closest('.fids-row');
+  if(row) openModal(parseInt(row.dataset.idx,10));
+});
+
+/* ======================================================
+   MODAL LOGIC
+====================================================== */
+const dlg = document.getElementById('moduleDialog');
+const dlgIcon = document.getElementById('dlgIcon');
+const dlgEyebrow = document.getElementById('dlgEyebrow');
+const dlgTitle = document.getElementById('dlgTitle');
+const dlgBloom = document.getElementById('dlgBloom');
+const dlgContent = document.getElementById('dlgContent');
+const dlgPos = document.getElementById('dlgPos');
+const dlgPrev = document.getElementById('dlgPrev');
+const dlgNext = document.getElementById('dlgNext');
+let currentIdx = 0;
+
+function renderModule(i){
+  currentIdx = i;
+  const m = modules[i];
+  dlgIcon.textContent = m.icon;
+  dlgEyebrow.textContent = `${m.tag} · ${m.kindLabel}`;
+  dlgTitle.textContent = m.title;
+  dlgBloom.textContent = `Nivel Bloom: ${m.bloom}`;
+  dlgPos.textContent = `${i+1} / ${modules.length}`;
+  dlgPrev.disabled = i === 0;
+  dlgNext.disabled = i === modules.length - 1;
+
+  const resourceCards = m.resources.map((r, ri) => `
+    <div class="res-card" data-res="${i}-${ri}">
+      <div class="res-top">
+        <span class="res-icon">${r.icon}</span>
+        <span class="res-title">${r.title}</span>
+        <span class="res-plus">+</span>
+      </div>
+      <div class="res-snippet">${r.snippet}</div>
+      <div class="res-full">
+        <div class="lbl">Contenido</div>
+        <div>${r.full}</div>
+        <div class="lbl">Propósito pedagógico</div>
+        <div>${r.purposeText}</div>
+      </div>
+    </div>`).join('');
+
+  dlgContent.innerHTML = `
+    <div class="pb-grid">
+      <div class="pb-block">
+        <h4>Propósito del módulo</h4>
+        <p>${m.purpose}</p>
+        <h4>Resultado de aprendizaje</h4>
+        <p>${m.outcome}</p>
+      </div>
+      <div class="pb-block">
+        <h4>Temario resumido</h4>
+        <ul class="temario-list">${m.temario.map(t => `<li>${t}</li>`).join('')}</ul>
+      </div>
+    </div>
+    <div class="resources-title">Recursos del módulo — clic para ver el detalle</div>
+    <div class="resource-grid">${resourceCards}</div>`;
+
+  dlgContent.scrollTop = 0;
+}
+
+function openModal(i){
+  renderModule(i);
+  if(!dlg.open) dlg.showModal();
+}
+
+document.getElementById('dlgClose').addEventListener('click', () => dlg.close());
+dlg.addEventListener('click', (e) => { if(e.target === dlg) dlg.close(); });
+dlgPrev.addEventListener('click', () => { if(currentIdx>0) renderModule(currentIdx-1); });
+dlgNext.addEventListener('click', () => { if(currentIdx<modules.length-1) renderModule(currentIdx+1); });
+
+dlgContent.addEventListener('click', (e) => {
+  const card = e.target.closest('.res-card');
+  if(card) card.classList.toggle('open');
+});
+
+/* ======================================================
+   TABS
+====================================================== */
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const tab = btn.dataset.tab;
+    document.getElementById('view-panel').classList.toggle('active', tab === 'panel');
+    document.getElementById('view-gantt').classList.toggle('active', tab === 'gantt');
+  });
+});
+
+/* ======================================================
+   RENDER: GANTT (basado en rango de fechas, julio–agosto)
+====================================================== */
+const dayLetters = ['D','L','M','X','J','V','S'];
+
+function parseISO(s){ const [y,m,d] = s.split('-').map(Number); return new Date(y, m-1, d); }
+function fmtISO(d){ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; }
+function addDays(d, n){ const nd = new Date(d); nd.setDate(nd.getDate()+n); return nd; }
+function isWeekendDate(d){ const dow = d.getDay(); return dow === 0 || dow === 6; }
+
+const monthAbbr = ['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
+
+// construye la lista de días del calendario, desde GANTT_START hasta GANTT_END
+const ganttDays = [];
+for(let d = parseISO(GANTT_START); d <= parseISO(GANTT_END); d = addDays(d,1)){
+  ganttDays.push(new Date(d));
+}
+const TOTAL_DAYS = ganttDays.length;
+
+// mapa fecha ISO -> índice (0-based) dentro del calendario
+const dateIndex = {};
+ganttDays.forEach((d,i) => { dateIndex[fmtISO(d)] = i; });
+function colOf(iso){ return dateIndex[iso] + 2; } // +1 por columna de etiqueta, +1 porque grid-column es 1-indexado
+
+const ganttGrid = document.getElementById('gantt-grid');
+ganttGrid.innerHTML = '';
+ganttGrid.style.gridTemplateColumns = `230px repeat(${TOTAL_DAYS}, minmax(30px,1fr))`;
+ganttGrid.style.minWidth = `${230 + TOTAL_DAYS * 32}px`;
+
+const corner = document.createElement('div');
+corner.className = 'g-corner';
+ganttGrid.appendChild(corner);
+
+ganttDays.forEach((d, i) => {
+  const iso = fmtISO(d);
+  const isMonthStart = d.getDate() === 1 || i === 0;
+  const cell = document.createElement('div');
+  cell.className = 'g-head-cell' + (isWeekendDate(d) ? ' weekend' : '') + (iso === START_MARK ? ' today' : '') + (d.getDate() === 1 ? ' month-start' : '');
+  cell.style.gridColumn = i + 2;
+  cell.innerHTML = `<span class="g-monthtag${isMonthStart ? ' show' : ''}">${monthAbbr[d.getMonth()]}</span><span class="g-daynum">${d.getDate()}</span><span class="g-dayletter">${dayLetters[d.getDay()]}</span>`;
+  ganttGrid.appendChild(cell);
+});
+
+ganttTasks.forEach((t, idx) => {
+  const row = idx + 2;
+
+  const rowLabel = document.createElement('div');
+  rowLabel.className = 'g-row-label';
+  rowLabel.style.gridRow = row;
+  rowLabel.innerHTML = `<span>${t.label}<span class="sub">${t.sub}</span></span>`;
+  ganttGrid.appendChild(rowLabel);
+
+  const rowBg = document.createElement('div');
+  rowBg.className = 'g-row-bg';
+  rowBg.style.gridRow = row;
+  ganttGrid.appendChild(rowBg);
+
+  ganttDays.forEach((d, i) => {
+    if(isWeekendDate(d)){
+      const dc = document.createElement('div');
+      dc.className = 'g-daycell weekend';
+      dc.style.gridColumn = i + 2;
+      dc.style.gridRow = row;
+      ganttGrid.appendChild(dc);
+    }
+  });
+
+  if(t.diamonds){
+    t.diamonds.forEach(dm => {
+      const cell = document.createElement('div');
+      cell.className = 'g-diamond-cell';
+      cell.style.gridColumn = colOf(dm.date);
+      cell.style.gridRow = row;
+      cell.setAttribute('data-tip', dm.tip);
+      const dia = document.createElement('div');
+      dia.className = 'g-diamond';
+      dia.style.background = t.color;
+      cell.appendChild(dia);
+      ganttGrid.appendChild(cell);
+    });
+  } else if(t.segments){
+    t.segments.forEach(seg => {
+      const bar = document.createElement('div');
+      bar.className = 'g-bar';
+      bar.style.gridColumn = `${colOf(seg.start)} / ${colOf(seg.end) + 1}`;
+      bar.style.gridRow = row;
+      bar.style.background = t.color;
+      bar.setAttribute('data-tip', seg.tip);
+      ganttGrid.appendChild(bar);
+    });
+  } else {
+    const bar = document.createElement('div');
+    bar.className = 'g-bar';
+    bar.style.gridColumn = `${colOf(t.start)} / ${colOf(t.end) + 1}`;
+    bar.style.gridRow = row;
+    bar.style.background = t.color;
+    if(t.opacity) bar.style.opacity = t.opacity;
+    bar.setAttribute('data-tip', t.tip);
+    ganttGrid.appendChild(bar);
+  }
+});
+
+const legend = document.getElementById('gantt-legend');
+const legendSeen = new Set();
+let legendHtml = '';
+ganttTasks.forEach(t => {
+  if(legendSeen.has(t.label)) return;
+  legendSeen.add(t.label);
+  const isMilestone = !!t.diamonds;
+  legendHtml += `<span class="leg-item"><span class="leg-swatch${isMilestone?' diamond':''}" style="background:${t.color}; opacity:${t.opacity||1}"></span>${t.label}</span>`;
+});
+legendHtml += `<span class="leg-item"><span class="leg-swatch" style="background:var(--sand); border:1px solid var(--tan-2)"></span>Fin de semana</span>`;
+legendHtml += `<span class="leg-item"><span class="leg-swatch" style="background:rgba(227,165,66,0.35); border:1px solid var(--amber)"></span>Inicio del proyecto (14 jul)</span>`;
+legend.innerHTML = legendHtml;
+</script>
+</body>
+</html>
